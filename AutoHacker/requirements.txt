@@ -5,4 +5,4 @@ rich
 mako
 wasabi
 
-cai
+cai-framework
