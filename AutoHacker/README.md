@@ -12,7 +12,7 @@ y...
 ```
 deactivate
 mkdir "$vCarpetaGit"/ 2> /dev/null
-cd ~/Git/
+cd "$vCarpetaGit"/
 rm -rf pruebas/
 git clone https://github.com/nipegun/pruebas.git
 rm -rf ~/HackingTools/AutoHacker/ 2> /dev/null
