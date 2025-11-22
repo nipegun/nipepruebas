@@ -1,4 +1,4 @@
-# AutoHacker - Resumen Técnico
+# AutoHacker
 
 ## Descripción General
 
