@@ -376,7 +376,7 @@ start_idle_timer()
 
 # Instead of direct import
 try:
-    from cai.cli import START_TIME
+    from cli import START_TIME
 except ImportError:
     START_TIME = None
 
@@ -411,7 +411,7 @@ class CostTracker:
         """Check if adding the new cost would exceed the price limit."""
         import os
 
-        from cai.sdk.agents.exceptions import PriceLimitExceeded
+        from sdk.agents.exceptions import PriceLimitExceeded
 
         price_limit_env = os.getenv("CAI_PRICE_LIMIT")
         try:
@@ -435,7 +435,7 @@ class CostTracker:
         # Also update the global usage tracker when session cost changes
         # This ensures consistency between COST_TRACKER and GLOBAL_USAGE_TRACKER
         try:
-            from cai.sdk.agents.global_usage_tracker import GLOBAL_USAGE_TRACKER
+            from sdk.agents.global_usage_tracker import GLOBAL_USAGE_TRACKER
             # We don't have model/token details here, so just update the cost
             # The tokens should have been tracked separately
             # This is just a safety net to ensure costs are consistent
@@ -941,8 +941,8 @@ def visualize_agent_graph(start_agent):
         all_tools = getattr(agent, "tools", [])
         
         # Import necessary modules for MCP checking
-        from cai.repl.commands.mcp import get_mcp_tools_for_agent, _GLOBAL_MCP_SERVERS
-        from cai.sdk.agents.tool import FunctionTool
+        from repl.commands.mcp import get_mcp_tools_for_agent, _GLOBAL_MCP_SERVERS
+        from sdk.agents.tool import FunctionTool
         
         # Separate regular tools from MCP tools
         regular_tools = []
@@ -3610,7 +3610,7 @@ def _get_timing_info(execution_info=None):
 
     # Get session timing information
     try:
-        from cai.cli import START_TIME
+        from cli import START_TIME
 
         total_time = time.time() - START_TIME if START_TIME else None
     except ImportError:
