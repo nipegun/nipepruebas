@@ -1,5 +1,14 @@
 # AutoHacker
 
+## Instalación
+
+```
+mkdir ~/Git/ && cd ~/Git/
+git clone https://github.com/nipegun/pruebas.git
+mkdir ~/HackingTools/AutoHacker/
+cp -R ~/Git/pruebas/AutoHacker/* ~/HackingTools/AutoHacker/
+```
+
 ## Descripción General
 
 **AutoHacker** es un framework especializado en Python para construir **Inteligencias Artificiales de Ciberseguridad (IAC)** de nivel profesional, específicamente orientadas a Bug Bounty, Red Teaming, Blue Teaming y análisis de seguridad ofensiva/defensiva.
