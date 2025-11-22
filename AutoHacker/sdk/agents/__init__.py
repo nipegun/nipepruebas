@@ -1,22 +1,3 @@
-import logging
-import sys
-from typing import Literal
-
-try:
-    from openai import AsyncOpenAI
-except ModuleNotFoundError as exc:
-    # Provide a lightweight fallback so the package can be imported without the
-    # optional OpenAI dependency (useful for local-only providers like Ollama).
-    # Any attempt to use OpenAI-specific helpers will surface the original
-    # import error with a clear message.
-    class AsyncOpenAI:  # type: ignore[misc]
-        """Placeholder type used when the optional openai package is missing."""
-
-    _openai_import_error = exc
-else:
-    _openai_import_error = None
-
-from . import _config
 from .agent import Agent, ToolsToFinalOutputFunction, ToolsToFinalOutputResult
 from .agent_output import AgentOutputSchema
 from .computer import AsyncComputer, Button, Computer, Environment
@@ -53,9 +34,6 @@ from .items import (
 from .lifecycle import AgentHooks, RunHooks
 from .model_settings import ModelSettings
 from .models.interface import Model, ModelProvider, ModelTracing
-from .models.openai_chatcompletions import OpenAIChatCompletionsModel
-from .models.openai_provider import OpenAIProvider
-from .models.openai_responses import OpenAIResponsesModel
 from .result import RunResult, RunResultStreaming
 from .run import RunConfig, Runner
 from .run_context import RunContextWrapper, TContext
@@ -114,60 +92,6 @@ from .tracing import (
 from .usage import Usage
 
 
-def _require_openai() -> None:
-    """Raise a helpful error if the optional ``openai`` dependency is missing."""
-
-    if _openai_import_error is not None:
-        raise ModuleNotFoundError(
-            "The optional 'openai' dependency is required for this feature. "
-            "Install it with `pip install openai`."
-        ) from _openai_import_error
-
-
-def set_default_openai_key(key: str, use_for_tracing: bool = True) -> None:
-    """Set the default OpenAI API key to use for LLM requests (and optionally tracing(). This is
-    only necessary if the OPENAI_API_KEY environment variable is not already set.
-
-    If provided, this key will be used instead of the OPENAI_API_KEY environment variable.
-
-    Args:
-        key: The OpenAI key to use.
-        use_for_tracing: Whether to also use this key to send traces to OpenAI. Defaults to True
-            If False, you'll either need to set the OPENAI_API_KEY environment variable or call
-            set_tracing_export_api_key() with the API key you want to use for tracing.
-    """
-    _require_openai()
-    _config.set_default_openai_key(key, use_for_tracing)
-
-
-def set_default_openai_client(client: AsyncOpenAI, use_for_tracing: bool = True) -> None:
-    """Set the default OpenAI client to use for LLM requests and/or tracing. If provided, this
-    client will be used instead of the default OpenAI client.
-
-    Args:
-        client: The OpenAI client to use.
-        use_for_tracing: Whether to use the API key from this client for uploading traces. If False,
-            you'll either need to set the OPENAI_API_KEY environment variable or call
-            set_tracing_export_api_key() with the API key you want to use for tracing.
-    """
-    _require_openai()
-    _config.set_default_openai_client(client, use_for_tracing)
-
-
-def set_default_openai_api(api: Literal["chat_completions", "responses"]) -> None:
-    """Set the default API to use for OpenAI LLM requests. By default, we will use the responses API
-    but you can set this to use the chat completions API instead.
-    """
-    _config.set_default_openai_api(api)
-
-
-def enable_verbose_stdout_logging():
-    """Enables verbose logging to stdout. This is useful for debugging."""
-    logger = logging.getLogger("openai.agents")
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(logging.StreamHandler(sys.stdout))
-
-
 __all__ = [
     "Agent",
     "ToolsToFinalOutputFunction",
@@ -177,9 +101,6 @@ __all__ = [
     "ModelProvider",
     "ModelTracing",
     "ModelSettings",
-    "OpenAIChatCompletionsModel",
-    "OpenAIProvider",
-    "OpenAIResponsesModel",
     "AgentOutputSchema",
     "Computer",
     "AsyncComputer",
@@ -263,11 +184,7 @@ __all__ = [
     "SpeechSpanData",
     "MCPListToolsSpanData",
     "TranscriptionSpanData",
-    "set_default_openai_key",
-    "set_default_openai_client",
-    "set_default_openai_api",
     "set_tracing_export_api_key",
-    "enable_verbose_stdout_logging",
     "gen_trace_id",
     "gen_span_id",
     "default_tool_error_function",

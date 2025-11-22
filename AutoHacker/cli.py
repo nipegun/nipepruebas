@@ -279,8 +279,6 @@ def suppress_aiohttp_warnings():
 # Call the function to suppress aiohttp warnings
 suppress_aiohttp_warnings()
 
-# OpenAI imports
-from openai import AsyncOpenAI
 from rich.console import Console
 
 from cai import is_pentestperf_available
@@ -304,7 +302,7 @@ from repl.ui.prompt import get_user_input
 from repl.ui.toolbar import get_toolbar_with_refresh
 
 # CAI SDK imports
-from sdk.agents import Agent, OpenAIChatCompletionsModel, Runner, set_tracing_disabled
+from sdk.agents import Agent, Runner, set_tracing_disabled
 from sdk.agents.items import ToolCallOutputItem
 from sdk.agents.exceptions import OutputGuardrailTripwireTriggered, InputGuardrailTripwireTriggered
 from sdk.agents.models.openai_chatcompletions import (
