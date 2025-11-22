@@ -2,9 +2,9 @@
 CTF Agent with one tool
 """
 import os
-from cai.sdk.agents import Agent, OpenAIChatCompletionsModel
+from cai.sdk.agents import Agent
+from cai.sdk.agents.models.model_factory import get_model_provider
 from cai.tools.reconnaissance.generic_linux_command import generic_linux_command  # noqa
-from openai import AsyncOpenAI
 from cai.util import create_system_prompt_renderer
 from cai.agents.guardrails import get_security_guardrails
 
@@ -52,9 +52,6 @@ instructions = """You are a Cybersecurity expert Leader facing a CTF
 
                 """
 
-#Loaded in openaichatcompletion client
-api_key = os.getenv('OPENAI_API_KEY', 'sk-placeholder-key-for-local-models')
-
 # Get security guardrails for this high-risk agent
 input_guardrails, output_guardrails = get_security_guardrails()
 
@@ -68,9 +65,10 @@ one_tool_agent = Agent(
     ],
     input_guardrails=input_guardrails,
     output_guardrails=output_guardrails,
-    model=OpenAIChatCompletionsModel(
-        model=model_name,
-        openai_client=AsyncOpenAI(api_key=api_key),
+    model=get_model_provider(
+        model_name=model_name,
+        agent_name="CTF agent",
+        agent_type="one_tool_agent",
     )
 )
 

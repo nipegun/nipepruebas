@@ -1,8 +1,8 @@
 """Red Team Base Agent"""
 import os
 from dotenv import load_dotenv
-from cai.sdk.agents import Agent, OpenAIChatCompletionsModel
-from openai import AsyncOpenAI
+from cai.sdk.agents import Agent
+from cai.sdk.agents.models.model_factory import get_model_provider
 # from cai.tools.command_and_control.sshpass import (  # pylint: disable=import-error # noqa: E501
 #     run_ssh_command_with_credentials
 # )
@@ -46,9 +46,10 @@ redteam_agent = Agent(
     tools=tools,
     input_guardrails=input_guardrails,
     output_guardrails=output_guardrails,
-    model=OpenAIChatCompletionsModel(
-        model=model_name,
-        openai_client=AsyncOpenAI(),
+    model=get_model_provider(
+        model_name=model_name,
+        agent_name="Red Team Agent",
+        agent_type="redteam_agent",
     ),
 )
 
