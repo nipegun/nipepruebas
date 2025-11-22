@@ -8,12 +8,26 @@ import time
 from functools import cached_property
 from typing import Any
 
-import httpx
+try:
+    import httpx
+except ModuleNotFoundError as exc:  # pragma: no cover - optional dependency
+    httpx = None  # type: ignore[assignment]
+    _httpx_import_error = exc
+else:
+    _httpx_import_error = None
 
 from ..logger import logger
 from .processor_interface import TracingExporter, TracingProcessor
 from .spans import Span
 from .traces import Trace
+
+
+def _require_httpx() -> None:
+    if _httpx_import_error is not None:
+        raise ModuleNotFoundError(
+            "The optional 'httpx' dependency is required for tracing export. "
+            "Install it with `pip install httpx`."
+        ) from _httpx_import_error
 
 
 class ConsoleSpanExporter(TracingExporter):
@@ -38,6 +52,7 @@ class BackendSpanExporter(TracingExporter):
         base_delay: float = 1.0,
         max_delay: float = 30.0,
     ):
+        _require_httpx()
         """
         Args:
             api_key: The API key for the "Authorization" header. Defaults to
@@ -263,7 +278,11 @@ class BatchTraceProcessor(TracingProcessor):
 
 
 # Create a shared global instance:
-_global_exporter = BackendSpanExporter()
+if _httpx_import_error is None:
+    _global_exporter = BackendSpanExporter()
+else:  # Fallback when httpx is not installed: log to console instead of erroring on import.
+    _global_exporter = ConsoleSpanExporter()
+
 _global_processor = BatchTraceProcessor(_global_exporter)
 
 

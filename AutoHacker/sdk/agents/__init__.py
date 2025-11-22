@@ -2,7 +2,19 @@ import logging
 import sys
 from typing import Literal
 
-from openai import AsyncOpenAI
+try:
+    from openai import AsyncOpenAI
+except ModuleNotFoundError as exc:
+    # Provide a lightweight fallback so the package can be imported without the
+    # optional OpenAI dependency (useful for local-only providers like Ollama).
+    # Any attempt to use OpenAI-specific helpers will surface the original
+    # import error with a clear message.
+    class AsyncOpenAI:  # type: ignore[misc]
+        """Placeholder type used when the optional openai package is missing."""
+
+    _openai_import_error = exc
+else:
+    _openai_import_error = None
 
 from . import _config
 from .agent import Agent, ToolsToFinalOutputFunction, ToolsToFinalOutputResult
@@ -102,6 +114,16 @@ from .tracing import (
 from .usage import Usage
 
 
+def _require_openai() -> None:
+    """Raise a helpful error if the optional ``openai`` dependency is missing."""
+
+    if _openai_import_error is not None:
+        raise ModuleNotFoundError(
+            "The optional 'openai' dependency is required for this feature. "
+            "Install it with `pip install openai`."
+        ) from _openai_import_error
+
+
 def set_default_openai_key(key: str, use_for_tracing: bool = True) -> None:
     """Set the default OpenAI API key to use for LLM requests (and optionally tracing(). This is
     only necessary if the OPENAI_API_KEY environment variable is not already set.
@@ -114,6 +136,7 @@ def set_default_openai_key(key: str, use_for_tracing: bool = True) -> None:
             If False, you'll either need to set the OPENAI_API_KEY environment variable or call
             set_tracing_export_api_key() with the API key you want to use for tracing.
     """
+    _require_openai()
     _config.set_default_openai_key(key, use_for_tracing)
 
 
@@ -127,6 +150,7 @@ def set_default_openai_client(client: AsyncOpenAI, use_for_tracing: bool = True)
             you'll either need to set the OPENAI_API_KEY environment variable or call
             set_tracing_export_api_key() with the API key you want to use for tracing.
     """
+    _require_openai()
     _config.set_default_openai_client(client, use_for_tracing)
 
 

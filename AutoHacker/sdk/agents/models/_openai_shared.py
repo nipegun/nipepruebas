@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from openai import AsyncOpenAI
+try:
+    from openai import AsyncOpenAI
+except ModuleNotFoundError:
+    class AsyncOpenAI:  # type: ignore[misc]
+        """Placeholder type used when the optional openai dependency is absent."""
 
 _default_openai_key: str | None = None
 _default_openai_client: AsyncOpenAI | None = None
