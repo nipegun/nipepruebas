@@ -12,8 +12,8 @@ and analyzing digital evidence. This agent specializes in:
 - Threat hunting: Proactively searching for indicators of compromise
 """
 import os
-from openai import AsyncOpenAI
-from cai.sdk.agents import Agent, OpenAIChatCompletionsModel  # pylint: disable=import-error
+from cai.sdk.agents import Agent  # pylint: disable=import-error
+from cai.sdk.agents.models.model_factory import create_model
 from cai.util import load_prompt_template, create_system_prompt_renderer
 from dotenv import load_dotenv
 from cai.tools.command_and_control.sshpass import (  # pylint: disable=import-error # noqa: E501
@@ -61,9 +61,11 @@ dfir_agent = Agent(
     instructions=create_system_prompt_renderer(dfir_agent_system_prompt),
     description="""Agent that specializes in Digital Forensics and Incident Response.
                    Expert in investigation and analysis of digital evidence.""",
-    model=OpenAIChatCompletionsModel(
-        model=os.getenv('CAI_MODEL', "alias0"),
-        openai_client=AsyncOpenAI(),
+    model=create_model(
+        os.getenv('CAI_MODEL', "llama3.2"),
+        agent_name="DFIR Agent",
+        agent_id="dfir_agent",
+        agent_type="dfir",
     ),
     tools=tools,
 
