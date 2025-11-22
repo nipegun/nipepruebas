@@ -3,6 +3,7 @@
 ## Instalación
 
 ```
+deactivate
 mkdir ~/Git/ 2> /dev/null
 cd ~/Git/
 rm -rf pruebas/
