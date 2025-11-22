@@ -1,7 +1,3 @@
-"""
-CAI SDK.
-"""
-
-from . import agents
+"""CAI SDK package."""
 
 __all__ = ["agents"]
