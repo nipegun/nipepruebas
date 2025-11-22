@@ -2,9 +2,16 @@
 
 ## Instalación
 
+Definimos la ubicación de la carpeta git:
+```
+vCarpetaGit="$HOME/Git3"
+```
+
+y...
+
 ```
 deactivate
-mkdir ~/Git/ 2> /dev/null
+mkdir "$vCarpetaGit"/ 2> /dev/null
 cd ~/Git/
 rm -rf pruebas/
 git clone https://github.com/nipegun/pruebas.git
