@@ -13,7 +13,7 @@ cp -R ~/Git/pruebas/AutoHacker/* ~/HackingTools/AutoHacker/
 cd ~/HackingTools/AutoHacker/
 python3 -m venv venv
 source ~/HackingTools/AutoHacker/venv/bin/activate
-pip install requirements.txt
+pip install -r requirements.txt
 deactivate
 ```
 
