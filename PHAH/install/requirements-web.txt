@@ -2,6 +2,8 @@ sudo apt-get -y update
 
 # nmap
   sudo apt-get -y install nmap
+# curl
+  sudo apt-get -y install curl
 # nikto
   sudo apt-get -y install nikto
 # dirb
