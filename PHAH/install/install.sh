@@ -4,13 +4,13 @@
 # Script para instalar y configurar PHAH en Debian
 #
 # Ejecución remota (puede requerir permisos sudo):
-#   curl -sL x | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/pruebas/refs/heads/main/PHAH/install/install.sh | bash
 #
 # Ejecución remota como root (para sistemas sin sudo):
-#   curl -sL x | sed 's-sudo--g' | bash
+#   curl -sL https://raw.githubusercontent.com/nipegun/pruebas/refs/heads/main/PHAH/install/install.sh | sed 's-sudo--g' | bash
 #
 # Bajar y editar directamente el archivo en nano
-#   curl -sL x | nano -
+#   curl -sL https://raw.githubusercontent.com/nipegun/pruebas/refs/heads/main/PHAH/install/install.sh | nano -
 # ----------
 
 # Definir constantes
