@@ -8,6 +8,8 @@ sudo apt-get -y update
   sudo apt-get -y install nikto
 # dirb
   sudo apt-get -y install dirb
+# whatweb
+  sudo apt-get -y install whatweb
 # wpscan
   sudo apt-get -y install ruby
   sudo apt-get -y ruby-dev
