@@ -4,7 +4,7 @@
 
 Definimos la ubicación de la carpeta git:
 ```
-vCarpetaGit="$HOME/Git3"
+vCarpetaGit="$HOME/Git"
 ```
 
 y...
@@ -13,11 +13,11 @@ y...
 deactivate
 mkdir "$vCarpetaGit"/ 2> /dev/null
 cd "$vCarpetaGit"/
-rm -rf pruebas/
-git clone https://github.com/nipegun/pruebas.git
+rm -rf NiPePruebas/
+git clone --depth 1 https://github.com/nipegun/NiPePruebas.git
 rm -rf ~/HackingTools/AutoHacker/ 2> /dev/null
 mkdir ~/HackingTools/AutoHacker/ 2> /dev/null
-cp -R "$vCarpetaGit"/pruebas/AutoHacker/* ~/HackingTools/AutoHacker/
+cp -R "$vCarpetaGit"/NiPePruebas/AutoHacker/* ~/HackingTools/AutoHacker/
 cd ~/HackingTools/AutoHacker/
 python3 -m venv venv
 source ~/HackingTools/AutoHacker/venv/bin/activate
