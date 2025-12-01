@@ -14,4 +14,4 @@ def fAdmin():
   return "<h1>Panel de Administración</h1><p>Acceso otorgado sin control.</p>"
 
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=5001, debug=True)
+  app.run(host="0.0.0.0", port=25001, debug=True)
