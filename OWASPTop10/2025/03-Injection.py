@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import sqlite3
 from flask import Flask, request
 
@@ -40,4 +41,4 @@ def fLogin():
 
 if __name__ == "__main__":
   fInit()
-  app.run(host="0.0.0.0", port=5003, debug=True)
+  app.run(host="0.0.0.0", port=25003, debug=True)
