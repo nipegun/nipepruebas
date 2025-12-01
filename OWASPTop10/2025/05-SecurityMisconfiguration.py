@@ -12,4 +12,4 @@ def fIndex():
 
 if __name__ == "__main__":
   # Debug + información sensible
-  app.run(host="0.0.0.0", port=5005, debug=True)
+  app.run(host="0.0.0.0", port=25005, debug=True)
