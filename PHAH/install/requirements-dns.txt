@@ -1,6 +1,0 @@
-sudo apt-get -y update
-
-# nmap
-  sudo apt-get -y install nmap
-# dig, nslookup, nsupdate y host
-  sudo apt-get -y install dnsutils

@@ -1,8 +1,0 @@
-# PHAP - Plataforma de Hacking de Penetración Automatizada
-# Dependencias de Python
-
-# Cliente HTTP
-httpx>=0.27.0
-
-# Soporte asíncrono
-asyncio>=3.4.3

@@ -1,8 +1,0 @@
-python-dotenv
-openai
-rich
-
-mako
-wasabi
-
-cai-framework
