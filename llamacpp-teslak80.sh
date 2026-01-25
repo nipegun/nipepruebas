@@ -26,6 +26,7 @@
   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 10
   sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 10
   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
+  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
 
 # Seleccionar gcc-10 como predeterminado
   sudo update-alternatives --config gcc
