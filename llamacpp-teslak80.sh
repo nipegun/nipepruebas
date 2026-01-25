@@ -32,10 +32,7 @@
   export CXX=/usr/bin/g++-11
   sudo sh /root/Software/CUDAToolkit/v11.4.4/installer.run --toolkit --silent
 
-# Exportar variables
-  export CUDA_HOME=/usr/local/cuda-11.4
-  export PATH=$CUDA_HOME/bin:$PATH
-  export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
 
 
     # Instalar dependencias para compilar
@@ -48,6 +45,13 @@
 
 mkdir -p $HOME/Git/llama.cpp/build
 cd $HOME/Git/llama.cpp/build
+# Exportar variables
+  export CUDA_HOME=/usr/local/cuda-11.4
+  export PATH=$CUDA_HOME/bin:$PATH
+  export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+
+  export CUDACXX=/usr/local/cuda-11.4/bin/nvcc
+
 cmake ..                      \
   -DGGML_CUDA=ON              \
   -DGGML_CUDA_FORCE=ON        \
