@@ -28,21 +28,30 @@
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 12
     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 12
 
-  # Seleccionar gcc-10 como predeterminado
-    sudo update-alternatives --config gcc
-    sudo update-alternatives --config g++
-    sudo update-alternatives --set gcc /usr/bin/gcc-10
-    sudo update-alternatives --set g++ /usr/bin/g++-10
-    # Verificar
-      gcc --version
-      g++ --version
+# Instalar cuda toolkit 11.4
 
+  # Descargar el instalador
+    cd /tmp
+    sudo wget https://developer.download.nvidia.com/compute/cuda/11.4.4/local_installers/cuda_11.4.4_470.82.01_linux.run
+    sudo mkdir -p /root/Software/CUDAToolkit/v11.4.4/
+    sudo mv /tmp/cuda_11.4.4_470.82.01_linux.run /root/Software/CUDAToolkit/v11.4.4/installer.run
 
-
-echo 'export PATH=/usr/local/cuda-11.4/bin:$PATH' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.4/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
-source ~/.bashrc
-
+  # Instalar
+    # Seleccionar gcc-10 como predeterminado
+      sudo update-alternatives --set gcc /usr/bin/gcc-10
+      sudo update-alternatives --set g++ /usr/bin/g++-10
+    sudo sh /root/Software/CUDAToolkit/v11.4.4/installer.run --toolkit
+    # Para instalar con el driver:
+    #   sudo sh /root/Software/CUDAToolkit/v11.4.4/installer.run --toolkit --driver --silent
+    # Para desinstalar:
+    #   /usr/local/cuda-11.4/bin/cuda-uninstaller
+    # Preparar path
+      # Para el usuario actual
+        echo 'export PATH=/usr/local/cuda-11.4/bin:$PATH' >> ~/.bashrc
+        echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.4/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+        source ~/.bashrc
+      # Para el root
+        echo '/usr/local/cuda-11.4/lib64' | sudo tee -a /etc/ld.so.conf.d/cuda.conf
 
 
 
@@ -67,11 +76,7 @@ source ~/.bashrc
   sudo ln -sf /usr/bin/gcc-11 /usr/bin/gcc
   sudo ln -sf /usr/bin/g++-11 /usr/bin/g++
 
-# Descargar el instalador de CUDA toolkit 11.4
-  cd /tmp
-  sudo wget https://developer.download.nvidia.com/compute/cuda/11.4.4/local_installers/cuda_11.4.4_470.82.01_linux.run
-  sudo mkdir -p /root/Software/CUDAToolkit/v11.4.4/
-  sudo mv /tmp/cuda_11.4.4_470.82.01_linux.run /root/Software/CUDAToolkit/v11.4.4/installer.run
+
 
 # Instalar sólo CUDA toolkit usando el compilador version 11
   export CC=/usr/bin/gcc-11
