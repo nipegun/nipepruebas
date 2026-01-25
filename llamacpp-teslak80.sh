@@ -71,6 +71,19 @@ cmake --build . --config Release -- -j$(nproc)
 
 
 
+# Añadir repositorio de Debian 11
+  echo "deb http://deb.debian.org/debian bullseye main" | sudo tee /etc/apt/sources.list.d/bullseye.list
+
+# Crear archivo de preferencias para evitar conflictos
+  echo 'Package: *'                                                   | tee    /etc/apt/preferences.d/bullseye
+  echo 'Pin: release n=bullseye'                                      | tee -a /etc/apt/preferences.d/bullseye
+  echo 'Pin-Priority: 100'                                            | tee -a /etc/apt/preferences.d/bullseye
+  echo ''                                                             | tee -a /etc/apt/preferences.d/bullseye
+  echo 'Package: gcc-10 g++-10 cpp-10 libgcc-10-dev libstdc++-10-dev' | tee -a /etc/apt/preferences.d/bullseye
+  echo 'Pin: release n=bullseye'                                      | tee -a /etc/apt/preferences.d/bullseye
+  echo 'Pin-Priority: 500'                                            | tee -a /etc/apt/preferences.d/bullseye
+
+
 
 CUDA_VISIBLE_DEVICES=0 \
 $HOME/IA/LlamaCPP/llama-cli \
