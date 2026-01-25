@@ -10,7 +10,7 @@
       git clone --depth 1 https://github.com/ggerganov/llama.cpp.git
 
 # Desisntalar la vesión actual del compilador gcc
-  sudo apt-get -y autoremove --purge gcc
+  sudo apt-get -y autoremove --purge gcc g++ gcc-11 g++-11 
 
 # Instalar la versión 11 del compilador cpp
   sudo apt-get -y update
