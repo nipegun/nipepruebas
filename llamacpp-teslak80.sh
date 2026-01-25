@@ -66,34 +66,37 @@
 # Compilar
   mkdir -p $HOME/Git/llama.cpp/build
   cd $HOME/Git/llama.cpp/build
+  cmake .. \
+    -DGGML_CUDA=ON \
+    -DGGML_CUDA_FORCE=ON \
+    -DGGML_CUDA_ARCHS=37 \
+    -DGGML_CUDA_F16=OFF \
+    -DGGML_CUDA_NO_PEER_COPY=ON \
+    -DGGML_NATIVE=OFF \
+    -DCMAKE_CUDA_COMPILER=/usr/local/cuda-11.4/bin/nvcc \
+    -DCMAKE_C_COMPILER=gcc-10 \
+    -DCMAKE_CXX_COMPILER=g++-10 \
+    -DCMAKE_CXX_FLAGS="-march=ivybridge -mtune=ivybridge -O3"
+  cmake --build . --config Release -- -j$(nproc) -Who-deprecated-gpu-targets
+
+
+# Ejecutar
+$HOME/IA/LlamaCPP/llama-cli -m modelo.gguf -ngl 20  --stats
+
+
+
+
+
+
+
+
+
+
 
   # Exportar variables
     export CUDA_HOME=/usr/local/cuda-11.4
     export PATH=$CUDA_HOME/bin:$PATH
     export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
-
-
-
-
-
-
-cmake .. \
-  -DGGML_CUDA=ON \
-  -DGGML_CUDA_FORCE=ON \
-  -DGGML_CUDA_ARCHS=37 \
-  -DGGML_CUDA_F16=OFF \
-  -DGGML_CUDA_NO_PEER_COPY=ON \
-  -DGGML_NATIVE=OFF \
-  -DCMAKE_CUDA_COMPILER=/usr/local/cuda-11.4/bin/nvcc \
-  -DCMAKE_C_COMPILER=gcc-10 \
-  -DCMAKE_CXX_COMPILER=g++-10 \
-  -DCMAKE_CXX_FLAGS="-march=ivybridge -mtune=ivybridge -O3"
-
-
-
-
-
-
 
 
 
@@ -122,16 +125,6 @@ cmake ..                      \
   -DGGML_NATIVE=OFF           \
   -DCMAKE_CXX_FLAGS="-march=ivybridge -mtune=ivybridge -O3"
 
-cmake --build . --config Release -- -j$(nproc)
 
 
-
-
-
-
-CUDA_VISIBLE_DEVICES=0 \
-$HOME/IA/LlamaCPP/llama-cli \
-  -m modelo.gguf \
-  -ngl 20 \
-  --stats
 
