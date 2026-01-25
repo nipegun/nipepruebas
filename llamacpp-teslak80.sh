@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Instalar dependencias para compilar
+  sudo apt-get -y update
+  sudo apt-get -y install cmake
+  sudo apt-get -y install build-essential
+  sudo apt-get -y install libcurl4-openssl-dev
+  sudo apt-get -y install ccache
+  sudo apt-get -y install libncurses-dev
+
 # Instalar gcc version 10
 
   # Desisntalar la vesión actual del compilador gcc
@@ -60,20 +68,13 @@
     rm -rf $HOME/Git/llama.cpp/
   git clone --depth 1 https://github.com/ggerganov/llama.cpp.git
 
-# Instalar dependencias para compilar
-      sudo apt-get -y update
-      sudo apt-get -y install cmake
-      sudo apt-get -y install build-essential
-      sudo apt-get -y install libcurl4-openssl-dev
-      sudo apt-get -y install ccache
-      sudo apt-get -y install libncurses-dev
-
-mkdir -p $HOME/Git/llama.cpp/build
-cd $HOME/Git/llama.cpp/build
-# Exportar variables
-  export CUDA_HOME=/usr/local/cuda-11.4
-  export PATH=$CUDA_HOME/bin:$PATH
-  export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+# Compilar
+  mkdir -p $HOME/Git/llama.cpp/build
+  cd $HOME/Git/llama.cpp/build
+  # Exportar variables
+    export CUDA_HOME=/usr/local/cuda-11.4
+    export PATH=$CUDA_HOME/bin:$PATH
+    export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 
   export CUDACXX=/usr/local/cuda-11.4/bin/nvcc
   export CC=/usr/bin/gcc-11
