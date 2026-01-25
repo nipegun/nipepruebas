@@ -8,6 +8,7 @@
   sudo apt-get -y install ccache
   sudo apt-get -y install libncurses-dev
   sudo apt-get -y install libssl-dev
+  sudo apt-get -y install git
 
 # Instalar gcc version 10
   # Desisntalar la vesión actual del compilador gcc
