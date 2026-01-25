@@ -137,17 +137,19 @@
     # Compilar
       mkdir -p $HOME/Git/llama.cpp/build
       cd $HOME/Git/llama.cpp/build
-      cmake .. \
-        -DGGML_CUDA=ON \
-        -DGGML_CUDA_FORCE=ON \
-        -DGGML_CUDA_ARCHS=37 \
-        -DGGML_CUDA_F16=OFF \
-        -DGGML_CUDA_NO_PEER_COPY=ON \
-        -DGGML_NATIVE=OFF \
+      cmake ..                                              \
+        -DGGML_CUDA=ON                                      \
+        -DGGML_CUDA_FORCE=ON                                \
+        -DGGML_CUDA_ARCHS=37                                \
+        -DGGML_CUDA_F16=OFF                                 \
+        -DGGML_CUDA_NO_PEER_COPY=ON                         \
+        -DGGML_NATIVE=OFF                                   \
         -DCMAKE_CUDA_COMPILER=/usr/local/cuda-11.4/bin/nvcc \
-        -DCMAKE_C_COMPILER=gcc-10 \
-        -DCMAKE_CXX_COMPILER=g++-10 \
+        -DCMAKE_C_COMPILER=gcc-10                           \
+        -DCMAKE_CXX_COMPILER=g++-10                         \
+        -DCMAKE_CUDA_FLAGS="-Wno-deprecated-gpu-targets"    \
         -DCMAKE_CXX_FLAGS="-march=ivybridge -mtune=ivybridge -O3"
+      export CUDA_NVCC_FLAGS="-Wno-deprecated-gpu-targets"
       cmake --build . --config Release -- -j$(nproc) -Wno-deprecated-gpu-targets
 
     # Crear carpeta
