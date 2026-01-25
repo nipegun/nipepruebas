@@ -19,7 +19,7 @@
 
   # Instalar gcc 10
     sudo apt-get -y update
-    sudo apt-get -y isntall gcc-10
+    sudo apt-get -y install gcc-10
     sudo apt-get -y install g++-10
 
 
