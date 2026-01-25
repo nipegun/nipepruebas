@@ -148,7 +148,7 @@
         -DCMAKE_C_COMPILER=gcc-10 \
         -DCMAKE_CXX_COMPILER=g++-10 \
         -DCMAKE_CXX_FLAGS="-march=ivybridge -mtune=ivybridge -O3"
-      cmake --build . --config Release -- -j$(nproc) -Who-deprecated-gpu-targets
+      cmake --build . --config Release -- -j$(nproc) -Wno-deprecated-gpu-targets
 
     # Crear carpeta
       mkdir -p $HOME/IA/LlamaCPP/ 2> /dev/null
