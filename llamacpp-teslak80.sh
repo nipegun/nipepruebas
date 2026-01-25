@@ -3,7 +3,7 @@
 # Instalar gcc version 10
 
   # Desisntalar la vesión actual del compilador gcc
-    sudo apt-get -y autoremove --purge gcc g++ gcc-11 g++-11 
+    #sudo apt-get -y autoremove --purge gcc g++ gcc-11 g++-11 
 
   # Añadir repositorio de Debian 11
     echo "deb http://deb.debian.org/debian bullseye main" | sudo tee /etc/apt/sources.list.d/bullseye.list
@@ -53,40 +53,14 @@
       # Para el root
         echo '/usr/local/cuda-11.4/lib64' | sudo tee -a /etc/ld.so.conf.d/cuda.conf
 
+# Descargar el repo de llama.cpp
+  mkdir -p $HOME/Git/ 2> /dev/null
+  cd $HOME/Git/
+  # Borrar versión ya descargada
+    rm -rf $HOME/Git/llama.cpp/
+  git clone --depth 1 https://github.com/ggerganov/llama.cpp.git
 
-
-
-    # Crear carpeta de Git
-      mkdir -p $HOME/Git/ 2> /dev/null
-
-    # Clonar Git
-      cd $HOME/Git/
-      # Borrar versión ya instalada
-        rm -rf $HOME/Git/llama.cpp/
-      git clone --depth 1 https://github.com/ggerganov/llama.cpp.git
-
-
-
-# Instalar la versión 11 del compilador cpp
-  sudo apt-get -y update
-  sudo apt-get -y install gcc-10
-  sudo apt-get -y install 'g++-10'
-
-# Enlazar el compilador 11 a los binarios por defecto de gcc
-  sudo ln -sf /usr/bin/gcc-11 /usr/bin/gcc
-  sudo ln -sf /usr/bin/g++-11 /usr/bin/g++
-
-
-
-# Instalar sólo CUDA toolkit usando el compilador version 11
-  export CC=/usr/bin/gcc-11
-  export CXX=/usr/bin/g++-11
-  sudo sh /root/Software/CUDAToolkit/v11.4.4/installer.run --toolkit --silent
-
-
-
-
-    # Instalar dependencias para compilar
+# Instalar dependencias para compilar
       sudo apt-get -y update
       sudo apt-get -y install cmake
       sudo apt-get -y install build-essential
