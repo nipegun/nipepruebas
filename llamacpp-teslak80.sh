@@ -14,8 +14,8 @@
 
 # Instalar la versión 11 del compilador cpp
   sudo apt-get -y update
-  sudo apt-get -y install gcc-11
-  sudo apt-get -y install 'g++-11'
+  sudo apt-get -y install gcc-10
+  sudo apt-get -y install 'g++-10'
 
 # Enlazar el compilador 11 a los binarios por defecto de gcc
   sudo ln -sf /usr/bin/gcc-11 /usr/bin/gcc
