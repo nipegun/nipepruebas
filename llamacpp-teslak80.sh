@@ -274,3 +274,6 @@
   sudo userdel ollama
   sudo groupdel ollama
   sudo rm -r /usr/share/ollama
+
+https://huggingface.co/ggml-org/GLM-4.7-Flash-GGUF/resolve/main/GLM-4.7-Flash-Q4_K.gguf
+https://huggingface.co/ggml-org/GLM-4.7-Flash-GGUF/resolve/main/GLM-4.7-Flash-Q8_0.gguf
