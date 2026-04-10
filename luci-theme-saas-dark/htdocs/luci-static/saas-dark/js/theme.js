@@ -5,7 +5,7 @@
   const sidebar = document.getElementById('sidebar');
   const sidebarToggle = document.getElementById('sidebarToggle');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-  const storageKey = 'luci-theme-modern-scheme';
+  const storageKey = 'luci-theme-saas-dark-scheme';
 
   function applyScheme(scheme) {
     if (scheme === 'light') {

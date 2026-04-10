@@ -13,7 +13,7 @@
   local page_path = luci.dispatcher.context.path or {}
   local page_name = table.concat(page_path, '/')
 %>
-<body class="theme-modern" data-luci-page="<%= page_name %>">
+<body class="theme-saas-dark" data-luci-page="<%= page_name %>">
   <header class="app-header">
     <div class="brand">
       <button class="icon-button" id="sidebarToggle" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
   </header>
   <div class="app-shell">
     <aside class="app-sidebar" id="sidebar">
-      <%+themes/modern/partials/navigation%>
+      <%+themes/saas-dark/partials/navigation%>
     </aside>
     <main class="app-main" id="main-content">
       <div class="main-inner">

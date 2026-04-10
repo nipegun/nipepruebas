@@ -1,54 +1,55 @@
 :root {
-  color-scheme: light dark;
-  --font-sans: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  color-scheme: dark;
+  --font-sans: 'Sora', 'DM Sans', 'Outfit', 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --radius-sm: 8px;
+  --radius-sm: 10px;
   --radius-lg: 18px;
-  --transition: 0.25s ease;
+  --transition: 0.2s ease;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
-  --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --shadow-soft: 0 8px 32px rgba(124, 58, 237, 0.10);
   --line-height: 1.6;
 
-  --bg-body: #0f172a;
-  --bg-surface: rgba(15, 23, 42, 0.85);
-  --bg-sidebar: rgba(15, 23, 42, 0.95);
-  --bg-elevated: rgba(15, 23, 42, 0.6);
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5f5;
-  --accent: #38bdf8;
-  --accent-strong: #0ea5e9;
-  --border-color: rgba(148, 163, 184, 0.3);
-  --success: #4ade80;
-  --warning: #facc15;
-  --error: #f87171;
+  --bg-body: #060d1a;
+  --bg-surface: rgba(13, 22, 39, 0.78);
+  --bg-sidebar: rgba(8, 15, 31, 0.95);
+  --bg-elevated: #111d30;
+  --text-primary: #f1f5f9;
+  --text-secondary: rgba(241, 245, 249, 0.45);
+  --accent: #7c3aed;
+  --accent-strong: #2563eb;
+  --border-color: rgba(255, 255, 255, 0.07);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --gradient-main: linear-gradient(135deg, #7c3aed, #2563eb);
 }
 
 :root.light {
-  --bg-body: #f8fafc;
-  --bg-surface: #ffffff;
-  --bg-sidebar: #f1f5f9;
-  --bg-elevated: #e2e8f0;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --accent: #2563eb;
-  --accent-strong: #1d4ed8;
-  --border-color: rgba(148, 163, 184, 0.4);
+  --bg-body: #060d1a;
+  --bg-surface: rgba(13, 22, 39, 0.78);
+  --bg-sidebar: rgba(8, 15, 31, 0.95);
+  --bg-elevated: #111d30;
+  --text-primary: #f1f5f9;
+  --text-secondary: rgba(241, 245, 249, 0.45);
+  --accent: #7c3aed;
+  --accent-strong: #2563eb;
+  --border-color: rgba(255, 255, 255, 0.07);
 }
 
 * {
   box-sizing: border-box;
 }
 
-body.theme-modern {
+body.theme-saas-dark {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--text-primary);
-  background: radial-gradient(circle at top, rgba(56, 189, 248, 0.16), transparent 45%),
-              radial-gradient(circle at bottom, rgba(15, 118, 110, 0.2), transparent 35%),
+  background: radial-gradient(circle at top, rgba(124, 58, 237, 0.2), transparent 42%),
+              radial-gradient(circle at bottom, rgba(37, 99, 235, 0.18), transparent 35%),
               var(--bg-body);
   min-height: 100vh;
   display: flex;
@@ -56,7 +57,7 @@ body.theme-modern {
   transition: background 0.6s ease, color 0.3s ease;
 }
 
-body.theme-modern.login-page {
+body.theme-saas-dark.login-page {
   align-items: center;
   justify-content: center;
 }
@@ -117,7 +118,7 @@ body.theme-modern.login-page {
 }
 
 .icon-button:hover {
-  background: rgba(56, 189, 248, 0.25);
+  background: rgba(124, 58, 237, 0.32);
   transform: translateY(-1px);
 }
 
@@ -237,8 +238,8 @@ body.theme-modern.login-page {
 
 .sidebar-menu__item.is-active a,
 .sidebar-menu__item a:hover {
-  background: rgba(56, 189, 248, 0.18);
-  color: var(--accent);
+  background: rgba(124, 58, 237, 0.24);
+  color: #fff;
 }
 
 .sidebar-status {
@@ -348,7 +349,7 @@ body.theme-modern.login-page {
 .form-field input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.35);
 }
 
 .form-error {
@@ -370,14 +371,14 @@ body.theme-modern.login-page {
 }
 
 .button--primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  background: var(--gradient-main);
   color: white;
-  box-shadow: 0 16px 24px rgba(14, 165, 233, 0.35);
+  box-shadow: 0 16px 24px rgba(124, 58, 237, 0.35);
 }
 
 .button--primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 32px rgba(14, 165, 233, 0.4);
+  box-shadow: 0 20px 32px rgba(124, 58, 237, 0.4);
 }
 
 @media (max-width: 960px) {
@@ -433,8 +434,8 @@ body.theme-modern.login-page {
   font-size: 0.6rem;
 }
 
-body.theme-modern[data-color-scheme="light"] {
-  background: radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 45%),
-              radial-gradient(circle at bottom, rgba(249, 115, 22, 0.12), transparent 35%),
+body.theme-saas-dark[data-color-scheme="light"] {
+  background: radial-gradient(circle at top, rgba(124, 58, 237, 0.2), transparent 42%),
+              radial-gradient(circle at bottom, rgba(37, 99, 235, 0.18), transparent 35%),
               var(--bg-body);
 }
