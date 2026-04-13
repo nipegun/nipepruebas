@@ -29,15 +29,17 @@
 }
 
 :root.light {
-  --bg-body: #060d1a;
-  --bg-surface: rgba(13, 22, 39, 0.78);
-  --bg-sidebar: rgba(8, 15, 31, 0.95);
-  --bg-elevated: #111d30;
-  --text-primary: #f1f5f9;
-  --text-secondary: rgba(241, 245, 249, 0.45);
+  color-scheme: light;
+  --bg-body: #f1f5f9;
+  --bg-surface: rgba(255, 255, 255, 0.82);
+  --bg-sidebar: rgba(248, 250, 252, 0.95);
+  --bg-elevated: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: rgba(15, 23, 42, 0.50);
   --accent: #7c3aed;
   --accent-strong: #2563eb;
-  --border-color: rgba(255, 255, 255, 0.07);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0 8px 32px rgba(124, 58, 237, 0.08);
 }
 
 * {
@@ -435,7 +437,7 @@ body.theme-saas-dark.login-page {
 }
 
 body.theme-saas-dark[data-color-scheme="light"] {
-  background: radial-gradient(circle at top, rgba(124, 58, 237, 0.2), transparent 42%),
-              radial-gradient(circle at bottom, rgba(37, 99, 235, 0.18), transparent 35%),
+  background: radial-gradient(circle at top, rgba(124, 58, 237, 0.08), transparent 42%),
+              radial-gradient(circle at bottom, rgba(37, 99, 235, 0.06), transparent 35%),
               var(--bg-body);
 }
