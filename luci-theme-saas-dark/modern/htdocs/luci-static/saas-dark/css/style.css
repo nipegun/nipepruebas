@@ -1097,37 +1097,48 @@ table tr:hover td {
 /* --------------------------------------------------------------------------
    15. Modals / Dialogs
    -------------------------------------------------------------------------- */
-.modal {
+
+/* #modal_overlay is the full-page backdrop, hidden by default */
+#modal_overlay {
   position: fixed;
-  inset: 0;
-  z-index: 10000;
-  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: rgba(0, 0, 0, 0.7);
-  text-align: center;
-  padding: 40px 20px;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  pointer-events: none;
 }
 
-.modal::before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
+body.modal-overlay-active {
+  overflow: hidden;
 }
 
-.modal > .modal-dialog,
-.modal > div {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: left;
+body.modal-overlay-active #modal_overlay {
+  pointer-events: auto;
+}
+
+body.modal-overlay-active #modal_overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* .modal is the dialog card, NOT a full-page overlay */
+.modal {
+  width: 90%;
+  margin: 5em auto;
+  max-width: 600px;
+  border-radius: var(--radius-lg);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
   padding: 24px;
-  min-width: 360px;
-  max-width: 90vw;
-  max-height: 85vh;
-  overflow-y: auto;
   box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  max-height: 85vh;
 }
 
 .modal h4 {
