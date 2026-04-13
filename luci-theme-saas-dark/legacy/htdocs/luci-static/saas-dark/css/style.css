@@ -174,7 +174,6 @@ img {
   align-items: center;
   padding: 0 16px;
   z-index: 900;
-  backdrop-filter: blur(12px);
 }
 
 .sidebar-toggle {
@@ -1102,16 +1101,24 @@ table tr:hover td {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.2s ease;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.modal::before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 
 .modal > .modal-dialog,
 .modal > div {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
@@ -1121,7 +1128,6 @@ table tr:hover td {
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg);
-  animation: slideUp 0.25s ease;
 }
 
 .modal h4 {
