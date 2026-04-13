@@ -1,54 +1,66 @@
 <%
+  local sys  = require "luci.sys"
   local disp = require "luci.dispatcher"
   local util = require "luci.util"
   local i18n = require "luci.i18n"
   local ctx  = disp.context or {}
 
-  local lang = "en"
-  local ok_lang, val_lang = pcall(function() return i18n.context.lang end)
-  if ok_lang and val_lang then lang = val_lang end
+  local hostname = "OpenWrt"
+  pcall(function() hostname = sys.hostname() end)
 
-  local page_title = "LuCI"
+  local lang = "en"
+  pcall(function() lang = i18n.context.lang end)
+
+  local page_title = ""
   if ctx.title then page_title = ctx.title end
 
   local page_path = ctx.path or {}
-  local page_name = table.concat(page_path, "/")
+  local page_id = table.concat(page_path, "-")
 
-  local auth_user = "root"
-  if ctx.authuser then auth_user = ctx.authuser end
-%>
+  local res = resource or "/luci-static/resources"
+
+  local translations_url = ""
+  pcall(function() translations_url = disp.build_url("admin/translations", lang) end)
+-%>
 <!DOCTYPE html>
 <html lang="<%= lang %>">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title><%= page_title %> — OpenWrt</title>
-  <link rel="stylesheet" href="<%=media%>/css/style.css?v=2.0.0" />
-  <script defer src="<%=media%>/js/theme.js?v=2.0.0"></script>
+  <meta charset="utf-8">
+  <title><%= hostname %><%= page_title ~= "" and (" | " .. page_title) or "" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="darkreader-lock">
+  <link rel="stylesheet" href="<%=media%>/css/style.css">
+  <% if translations_url ~= "" then %>
+  <script src="<%= translations_url %>"></script>
+  <% end %>
+  <script src="<%= res %>/cbi.js"></script>
 </head>
-<body class="theme-saas-dark" data-luci-page="<%= page_name %>">
+<body class="theme-saas-dark lang_<%= lang %>" data-page="<%= page_id %>">
+  <% if not blank_page then %>
   <header class="app-header">
-    <div class="brand">
-      <button class="icon-button" id="sidebarToggle" aria-label="Toggle navigation">
-        <span class="icon icon-menu" aria-hidden="true"></span>
-      </button>
-      <span class="brand-title">OpenWrt</span>
-      <span class="brand-subtitle"><%= page_title %></span>
-    </div>
-    <div class="header-actions">
-      <button class="icon-button" id="colorScheme" aria-label="Toggle color scheme">
-        <span class="icon icon-sun" aria-hidden="true"></span>
-      </button>
-      <div class="user-menu" role="presentation">
-        <span class="user-avatar" aria-hidden="true">⚙</span>
-        <span class="user-name"><%= auth_user %></span>
-      </div>
-    </div>
+    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+      <span class="hamburger"></span>
+    </button>
+    <a class="brand" href="/"><%= hostname %></a>
+    <div id="indicators" class="header-indicators"></div>
   </header>
-  <div class="app-shell">
+  <div class="app-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="app-sidebar" id="sidebar">
-      <% include("themes/saas-dark/partials/navigation") %>
+      <div class="sidebar-header">
+        <span class="sidebar-brand">OpenWrt</span>
+        <span class="sidebar-version"><%= page_title %></span>
+      </div>
+      <nav class="sidebar-nav">
+        <ul class="nav sidebar-menu" id="topmenu" style="display:none"></ul>
+      </nav>
     </aside>
-    <main class="app-main" id="main-content">
-      <div class="main-inner">
+    <div id="maincontent" class="app-main">
+      <noscript>
+        <div class="alert-message warning">
+          <h4><%= translate("JavaScript required!") %></h4>
+          <p><%= translate("You must enable JavaScript in your browser or LuCI will not work properly.") %></p>
+        </div>
+      </noscript>
+      <div id="tabmenu" style="display:none"></div>
+  <% end %>

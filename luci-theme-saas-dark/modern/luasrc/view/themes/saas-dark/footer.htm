@@ -1,15 +1,18 @@
-      </div>
-    </main>
+<% if not blank_page then %>
+    </div>
   </div>
   <footer class="app-footer">
-    <div class="footer-meta">
-      <span>OpenWrt LuCI</span>
-      <span>Theme SaaS Dark v2.0.0</span>
-    </div>
-    <div class="footer-links">
-      <a href="https://openwrt.org/docs/guide-user/luci/" target="_blank" rel="noopener">Documentación</a>
-      <a href="https://github.com/openwrt" target="_blank" rel="noopener">Repositorio</a>
-    </div>
+    <span>
+      Powered by <a href="https://github.com/openwrt/luci" target="_blank" rel="noreferrer">LuCI</a>
+      — Theme SaaS Dark
+      <% if lua_active then %>
+        / <%= translate("Lua compatibility mode active") %>
+      <% end %>
+    </span>
   </footer>
+  <ul id="modemenu" style="display:none"></ul>
+  <script src="<%=media%>/js/theme.js"></script>
+  <script>L.require('menu-saas-dark')</script>
+<% end %>
 </body>
 </html>

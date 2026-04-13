@@ -61,16 +61,16 @@ fMain() {
   echo ""
 
   # Templates LuCI
-  fDescargar "luasrc/view/themes/saas-dark/header.htm"              "/usr/lib/lua/luci/view/themes/saas-dark/header.htm"              "0644"
-  fDescargar "luasrc/view/themes/saas-dark/footer.htm"              "/usr/lib/lua/luci/view/themes/saas-dark/footer.htm"              "0644"
-  fDescargar "luasrc/view/themes/saas-dark/index.htm"               "/usr/lib/lua/luci/view/themes/saas-dark/index.htm"               "0644"
-  fDescargar "luasrc/view/themes/saas-dark/login.htm"               "/usr/lib/lua/luci/view/themes/saas-dark/login.htm"               "0644"
-  fDescargar "luasrc/view/themes/saas-dark/sysauth.htm"             "/usr/lib/lua/luci/view/themes/saas-dark/sysauth.htm"             "0644"
-  fDescargar "luasrc/view/themes/saas-dark/partials/navigation.htm" "/usr/lib/lua/luci/view/themes/saas-dark/partials/navigation.htm" "0644"
+  fDescargar "luasrc/view/themes/saas-dark/header.htm"  "/usr/lib/lua/luci/view/themes/saas-dark/header.htm"  "0644"
+  fDescargar "luasrc/view/themes/saas-dark/footer.htm"  "/usr/lib/lua/luci/view/themes/saas-dark/footer.htm"  "0644"
+  fDescargar "luasrc/view/themes/saas-dark/sysauth.htm" "/usr/lib/lua/luci/view/themes/saas-dark/sysauth.htm" "0644"
 
-  # Assets estáticos
+  # Assets estáticos del tema
   fDescargar "htdocs/luci-static/saas-dark/css/style.css" "/www/luci-static/saas-dark/css/style.css" "0644"
   fDescargar "htdocs/luci-static/saas-dark/js/theme.js"   "/www/luci-static/saas-dark/js/theme.js"   "0644"
+
+  # Módulo JS del menú (se instala en resources, junto a menu-bootstrap.js)
+  fDescargar "htdocs/luci-static/resources/menu-saas-dark.js" "/www/luci-static/resources/menu-saas-dark.js" "0644"
 
   # UCI defaults
   fDescargar "root/etc/uci-defaults/99-theme-saas-dark" "/etc/uci-defaults/99-theme-saas-dark" "0755"

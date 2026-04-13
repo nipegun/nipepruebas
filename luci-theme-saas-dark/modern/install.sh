@@ -22,19 +22,26 @@ copy_file() {
     echo "[OK] $src -> /$dst"
 }
 
-echo "Instalando luci-theme-saas-dark en: $DEST_ROOT"
+echo "Instalando luci-theme-saas-dark (modern) en: $DEST_ROOT"
 
-copy_file "luasrc/view/themes/saas-dark/header.htm" "usr/lib/lua/luci/view/themes/saas-dark/header.htm" "0644"
-copy_file "luasrc/view/themes/saas-dark/footer.htm" "usr/lib/lua/luci/view/themes/saas-dark/footer.htm" "0644"
-copy_file "luasrc/view/themes/saas-dark/index.htm" "usr/lib/lua/luci/view/themes/saas-dark/index.htm" "0644"
-copy_file "luasrc/view/themes/saas-dark/login.htm" "usr/lib/lua/luci/view/themes/saas-dark/login.htm" "0644"
-copy_file "luasrc/view/themes/saas-dark/partials/navigation.htm" "usr/lib/lua/luci/view/themes/saas-dark/partials/navigation.htm" "0644"
+# Templates LuCI
+copy_file "luasrc/view/themes/saas-dark/header.htm"  "usr/lib/lua/luci/view/themes/saas-dark/header.htm"  "0644"
+copy_file "luasrc/view/themes/saas-dark/footer.htm"  "usr/lib/lua/luci/view/themes/saas-dark/footer.htm"  "0644"
+copy_file "luasrc/view/themes/saas-dark/sysauth.htm" "usr/lib/lua/luci/view/themes/saas-dark/sysauth.htm" "0644"
+
+# Assets estáticos del tema
 copy_file "htdocs/luci-static/saas-dark/css/style.css" "www/luci-static/saas-dark/css/style.css" "0644"
-copy_file "htdocs/luci-static/saas-dark/js/theme.js" "www/luci-static/saas-dark/js/theme.js" "0644"
+copy_file "htdocs/luci-static/saas-dark/js/theme.js"   "www/luci-static/saas-dark/js/theme.js"   "0644"
+
+# Módulo JS del menú
+copy_file "htdocs/luci-static/resources/menu-saas-dark.js" "www/luci-static/resources/menu-saas-dark.js" "0644"
+
+# UCI defaults
 copy_file "root/etc/uci-defaults/99-theme-saas-dark" "etc/uci-defaults/99-theme-saas-dark" "0755"
 
+echo ""
 echo "Instalación completada."
-echo "Si estás instalando directo en el router, aplica/asegura el theme con:"
+echo "Si estás instalando directo en el router, aplica el theme con:"
 echo "  uci set luci.main.mediaurlbase='/luci-static/saas-dark'"
 echo "  uci commit luci"
 echo "  /etc/init.d/uhttpd restart"

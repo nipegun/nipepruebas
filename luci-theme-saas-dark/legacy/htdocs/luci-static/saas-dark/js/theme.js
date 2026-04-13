@@ -1,101 +1,49 @@
-(function () {
-  const root = document.documentElement;
-  const body = document.body;
-  const toggle = document.getElementById('colorScheme');
-  const sidebar = document.getElementById('sidebar');
-  const sidebarToggle = document.getElementById('sidebarToggle');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-  const storageKey = 'luci-theme-saas-dark-scheme';
+(function() {
+  'use strict';
 
-  function applyScheme(scheme) {
-    if (scheme === 'light') {
-      root.classList.add('light');
-      body.dataset.colorScheme = 'light';
-    } else {
-      root.classList.remove('light');
-      body.dataset.colorScheme = 'dark';
-    }
-    localStorage.setItem(storageKey, scheme);
+  var sidebar = document.getElementById('sidebar');
+  var sidebarToggle = document.getElementById('sidebarToggle');
+  var sidebarOverlay = document.getElementById('sidebarOverlay');
+
+  function openSidebar() {
+    if (!sidebar) return;
+    sidebar.classList.add('open');
+    if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    document.body.classList.add('sidebar-open');
   }
 
-  function toggleScheme() {
-    const current = body.dataset.colorScheme === 'light' ? 'dark' : 'light';
-    applyScheme(current);
-  }
-
-  function loadScheme() {
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      applyScheme(stored);
-    } else {
-      applyScheme(prefersDark.matches ? 'dark' : 'light');
-    }
-  }
-
-  function handlePrefersChange(event) {
-    if (!localStorage.getItem(storageKey)) {
-      applyScheme(event.matches ? 'dark' : 'light');
-    }
-  }
-
-  let activeFocusTrapHandler = null;
-
-  function trapFocus(element) {
-    const focusableSelectors = [
-      'a[href]',
-      'button:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      '[tabindex]:not([tabindex="-1"])'
-    ];
-    const focusables = element.querySelectorAll(focusableSelectors.join(','));
-    if (!focusables.length) return;
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-
-    function loopFocus(event) {
-      if (event.key !== 'Tab') return;
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-
-    activeFocusTrapHandler = loopFocus;
-    element.addEventListener('keydown', loopFocus);
-  }
-
-  function releaseFocusTrap(element) {
-    if (activeFocusTrapHandler) {
-      element.removeEventListener('keydown', activeFocusTrapHandler);
-      activeFocusTrapHandler = null;
-    }
+  function closeSidebar() {
+    if (!sidebar) return;
+    sidebar.classList.remove('open');
+    if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    document.body.classList.remove('sidebar-open');
   }
 
   function toggleSidebar() {
-    const isOpen = sidebar.classList.toggle('is-open');
-    sidebar.setAttribute('aria-hidden', String(!isOpen));
-    if (isOpen) {
-      trapFocus(sidebar);
-      sidebar.querySelector('a, button')?.focus();
+    if (!sidebar) return;
+    if (sidebar.classList.contains('open')) {
+      closeSidebar();
     } else {
-      releaseFocusTrap(sidebar);
+      openSidebar();
     }
   }
 
-  loadScheme();
-  prefersDark.addEventListener('change', handlePrefersChange);
-
-  if (toggle) {
-    toggle.addEventListener('click', toggleScheme);
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', function(ev) {
+      ev.preventDefault();
+      toggleSidebar();
+    });
   }
 
-  if (sidebar && sidebarToggle) {
-    sidebarToggle.addEventListener('click', toggleSidebar);
-    sidebar.setAttribute('aria-hidden', 'true');
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function() {
+      closeSidebar();
+    });
   }
+
+  document.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Escape') {
+      closeSidebar();
+    }
+  });
 })();

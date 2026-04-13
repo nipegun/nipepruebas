@@ -1,0 +1,1745 @@
+/* ==========================================================================
+   luci-theme-saas-dark — SaaS-style dark theme for LuCI
+   Compatible with OpenWrt 19.07 through 24.10 (legacy) and 25.12+ (modern)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Variables
+   -------------------------------------------------------------------------- */
+:root {
+  --bg-base: #060d1a;
+  --bg-surface: #0d1627;
+  --bg-elevated: #111d30;
+  --bg-input: #0a1222;
+  --bg-hover: #162035;
+  --bg-active: #1a2744;
+
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.20);
+  --border-focus: #7c3aed;
+
+  --accent-primary: #7c3aed;
+  --accent-primary-hover: #6d28d9;
+  --accent-blue: #2563eb;
+  --accent-cyan: #06b6d4;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: rgba(241, 245, 249, 0.55);
+  --text-muted: rgba(241, 245, 249, 0.35);
+  --text-link: #818cf8;
+  --text-link-hover: #a5b4fc;
+
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --info: #3b82f6;
+  --info-bg: rgba(59, 130, 246, 0.12);
+
+  --gradient-main: linear-gradient(135deg, #7c3aed, #2563eb);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 24px rgba(124, 58, 237, 0.08);
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --sidebar-width: 260px;
+  --header-height: 56px;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+}
+
+/* --------------------------------------------------------------------------
+   2. Base / Reset
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-margin-top: var(--header-height);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--text-link-hover);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.375rem; }
+h3 { font-size: 1.125rem; }
+h4 { font-size: 1rem; }
+
+p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+code, pre, .cbi-code, textarea[name] {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+pre {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  overflow-x: auto;
+  color: var(--text-primary);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: 1.5em 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: rgba(124, 58, 237, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout — Header
+   -------------------------------------------------------------------------- */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 900;
+  backdrop-filter: blur(12px);
+}
+
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  margin-right: 12px;
+  transition: background 0.15s ease, color 0.15s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.hamburger {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+  border-radius: 1px;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  position: absolute;
+  left: 0;
+  border-radius: 1px;
+}
+
+.hamburger::before { top: -6px; }
+.hamburger::after { top: 6px; }
+
+.brand {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.header-indicators,
+#indicators {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#indicators > * {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   4. Layout — Sidebar
+   -------------------------------------------------------------------------- */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: var(--header-height);
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 799;
+}
+
+.app-sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 800;
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 20px 20px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.sidebar-brand {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-version {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 8px 0;
+  overflow-y: auto;
+}
+
+/* --------------------------------------------------------------------------
+   5. Sidebar Menu (rendered by menu-saas-dark.js into #topmenu)
+   -------------------------------------------------------------------------- */
+#topmenu,
+.sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-item {
+  margin: 1px 8px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary) !important;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  text-decoration: none !important;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.menu-link:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary) !important;
+}
+
+.menu-item.active > .menu-link {
+  background: rgba(124, 58, 237, 0.12);
+  color: #a78bfa !important;
+}
+
+.menu-icon {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.menu-item.active > .menu-link .menu-icon {
+  background: var(--accent-primary);
+  opacity: 1;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+}
+
+.menu-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu-chevron {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  position: relative;
+  opacity: 0.4;
+  transition: transform 0.2s ease;
+}
+
+.menu-chevron::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+.menu-item.open > .menu-link .menu-chevron {
+  transform: rotate(180deg);
+}
+
+/* Submenu */
+.menu-sub {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 4px 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.menu-item.open > .menu-sub {
+  max-height: 800px;
+}
+
+.menu-sub-item a {
+  display: block;
+  padding: 6px 12px 6px 38px;
+  font-size: 12.5px;
+  color: var(--text-muted) !important;
+  border-radius: var(--radius-xs);
+  margin: 1px 0;
+  transition: all 0.15s ease;
+  text-decoration: none !important;
+}
+
+.menu-sub-item a:hover {
+  color: var(--text-primary) !important;
+  background: var(--bg-hover);
+}
+
+.menu-sub-item.active a {
+  color: #a78bfa !important;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   6. Layout — Main content
+   -------------------------------------------------------------------------- */
+.app-main,
+#maincontent {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 24px 28px 40px;
+  min-width: 0;
+  min-height: calc(100vh - var(--header-height));
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   7. Layout — Footer
+   -------------------------------------------------------------------------- */
+.app-footer {
+  margin-left: var(--sidebar-width);
+  padding: 16px 28px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.app-footer a {
+  color: var(--text-secondary);
+}
+
+.app-footer a:hover {
+  color: var(--text-link);
+}
+
+/* --------------------------------------------------------------------------
+   8. Tab Menu (#tabmenu)
+   -------------------------------------------------------------------------- */
+#tabmenu {
+  margin-bottom: 20px;
+}
+
+.tabs,
+.cbi-tabmenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tabs > li,
+.cbi-tabmenu > li {
+  margin-bottom: -1px;
+}
+
+.tabs > li > a,
+.cbi-tabmenu > li > a,
+.cbi-tab > a,
+.cbi-tab-disabled > a {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.tabs > li > a:hover,
+.cbi-tabmenu > li > a:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.tabs > li.active > a,
+.cbi-tabmenu > .cbi-tab > a {
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
+  background: var(--bg-elevated);
+}
+
+.cbi-tabcontainer {
+  margin-top: 16px;
+}
+
+.cbi-tab-descr {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 4px;
+  padding: 8px 16px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   9. CBI Forms — Maps & Sections
+   -------------------------------------------------------------------------- */
+.cbi-map {
+  margin-bottom: 20px;
+}
+
+.cbi-map-descr {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.cbi-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.cbi-section > legend,
+.cbi-section > h3,
+.cbi-section-descr + .cbi-section-node {
+  margin-top: 12px;
+}
+
+.cbi-section > legend,
+.cbi-section > h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 16px;
+}
+
+.cbi-section-descr {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.cbi-section-node {
+  /* container for form values */
+}
+
+.cbi-section-error {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.cbi-section-create {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   10. CBI Forms — Values (form fields)
+   -------------------------------------------------------------------------- */
+.cbi-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.cbi-value:last-child {
+  border-bottom: none;
+}
+
+.cbi-value-title {
+  flex: 0 0 200px;
+  padding-right: 16px;
+  padding-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cbi-value-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.cbi-value-description {
+  flex-basis: 100%;
+  padding-left: 200px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   11. Form Inputs
+   -------------------------------------------------------------------------- */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="search"],
+input[type="date"],
+input[type="time"],
+.cbi-input-text,
+.cbi-input-password,
+select,
+.cbi-input-select,
+textarea {
+  display: inline-block;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  max-width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled,
+input[readonly],
+textarea[readonly] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--accent-primary);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+}
+
+select {
+  cursor: pointer;
+  padding-right: 28px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+/* CBI dropdown */
+.cbi-dropdown {
+  display: inline-flex;
+  position: relative;
+  min-width: 180px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.cbi-dropdown:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  outline: none;
+}
+
+.cbi-dropdown > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.cbi-dropdown > ul > li {
+  padding: 6px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cbi-dropdown > ul > li[selected] {
+  /* currently selected value */
+}
+
+.cbi-dropdown[open] > ul.dropdown,
+.cbi-dropdown > .open {
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  right: -1px;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.cbi-dropdown > ul.dropdown > li:hover,
+.cbi-dropdown .open > li:hover {
+  background: var(--bg-hover);
+}
+
+.cbi-dropdown > ul.dropdown > li[selected],
+.cbi-dropdown .open > li.focus {
+  background: rgba(124, 58, 237, 0.12);
+  color: #a78bfa;
+}
+
+.cbi-dropdown > .more,
+.cbi-dropdown > .open > .more {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* Dynamic lists */
+.cbi-dynlist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cbi-dynlist > .item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.cbi-dynlist > .item > input {
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  flex: 1;
+  padding: 2px 0;
+}
+
+.cbi-dynlist > .add-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* File browser */
+.cbi-filebrowser {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Checkbox / radio styling */
+.cbi-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* Optionals */
+.cbi-optionals {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   12. Buttons
+   -------------------------------------------------------------------------- */
+.btn,
+.cbi-button,
+button[type="submit"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover,
+.cbi-button:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+.btn:active,
+.cbi-button:active {
+  transform: translateY(1px);
+}
+
+.btn:focus,
+.cbi-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+/* Primary / Positive / Save / Apply */
+.btn.cbi-button-positive,
+.cbi-button-positive,
+.cbi-button-save,
+.cbi-button-apply,
+.btn.important,
+.btn.cbi-button-action {
+  background: var(--gradient-main);
+  border-color: transparent;
+  color: #fff;
+}
+
+.btn.cbi-button-positive:hover,
+.cbi-button-positive:hover,
+.cbi-button-save:hover,
+.cbi-button-apply:hover,
+.btn.important:hover {
+  filter: brightness(1.1);
+}
+
+/* Negative / Remove / Delete */
+.btn.cbi-button-negative,
+.cbi-button-negative,
+.cbi-button-remove {
+  background: var(--danger-bg);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+}
+
+.btn.cbi-button-negative:hover,
+.cbi-button-negative:hover,
+.cbi-button-remove:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Neutral / Reset */
+.cbi-button-neutral,
+.cbi-button-reset {
+  background: var(--bg-elevated);
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+
+/* Edit / Add */
+.cbi-button-edit,
+.cbi-button-add {
+  background: var(--info-bg);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: var(--info);
+}
+
+/* Page actions (Save & Apply, Save, Reset) */
+.cbi-page-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 0;
+  margin-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Inline button groups */
+.cbi-section-actions,
+.td.cbi-section-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cbi-section-actions > * {
+  margin-left: 4px;
+}
+
+.cbi-button + .cbi-button,
+.btn + .btn {
+  margin-left: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   13. Tables (div-based LuCI tables)
+   -------------------------------------------------------------------------- */
+.table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tr {
+  display: table-row;
+}
+
+.td, .th {
+  display: table-cell;
+  padding: 10px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.th {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  white-space: nowrap;
+}
+
+.tr:last-child > .td {
+  border-bottom: none;
+}
+
+.tr:hover > .td {
+  background: var(--bg-hover);
+}
+
+/* Standard HTML tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+table th {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+}
+
+table tr:hover td {
+  background: var(--bg-hover);
+}
+
+/* CBI section tables */
+.cbi-section-table {
+  width: 100%;
+  margin: 0;
+}
+
+.cbi-section-table .tr:first-child .th,
+.cbi-section-table-titles .th {
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.cbi-section-table-row:hover .td {
+  background: var(--bg-hover);
+}
+
+.cbi-section-table-row .td {
+  padding: 8px 12px;
+}
+
+.cbi-rowstyle-1 {
+  background: transparent;
+}
+
+.cbi-rowstyle-2 {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* --------------------------------------------------------------------------
+   14. Alerts / Messages
+   -------------------------------------------------------------------------- */
+.alert-message {
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  border: 1px solid;
+}
+
+.alert-message h4 {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.alert-message.warning {
+  background: var(--warning-bg);
+  border-color: rgba(245, 158, 11, 0.25);
+  color: var(--warning);
+}
+
+.alert-message.error {
+  background: var(--danger-bg);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: var(--danger);
+}
+
+.alert-message.notice,
+.alert-message.info {
+  background: var(--info-bg);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: var(--info);
+}
+
+.alert-message.success {
+  background: var(--success-bg);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: var(--success);
+}
+
+/* --------------------------------------------------------------------------
+   15. Modals / Dialogs
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal > .modal-dialog,
+.modal > div {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  min-width: 360px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.25s ease;
+}
+
+.modal h4 {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.modal .btn,
+.modal .cbi-button {
+  margin-top: 12px;
+}
+
+.modal .right {
+  text-align: right;
+}
+
+.modal .spinning {
+  margin-bottom: 12px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   16. Progress Bars
+   -------------------------------------------------------------------------- */
+.cbi-progressbar {
+  position: relative;
+  height: 20px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.cbi-progressbar > div {
+  height: 100%;
+  background: var(--gradient-main);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+  min-width: 0;
+}
+
+.cbi-progressbar::after {
+  content: attr(title);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   17. Tooltips
+   -------------------------------------------------------------------------- */
+.cbi-tooltip-container {
+  position: relative;
+}
+
+.cbi-tooltip {
+  position: absolute;
+  z-index: 2000;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Help icon tooltip */
+.cbi-value-helpicon,
+.cbi-helpicon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: help;
+  margin-left: 6px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   18. Network / Interface Badges
+   -------------------------------------------------------------------------- */
+.ifacebox {
+  display: inline-block;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin: 4px;
+  min-width: 140px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.ifacebox-head {
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+}
+
+.ifacebox-head.active {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.ifacebox-body {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ifacebadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 3px 10px 3px 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.ifacebadge img {
+  width: 16px;
+  height: 16px;
+}
+
+.zonebadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.zonebadge > strong {
+  font-weight: 600;
+}
+
+.zonebadge > .ifacebadge {
+  margin: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   19. Spinner / Loading
+   -------------------------------------------------------------------------- */
+.spinning {
+  position: relative;
+  padding-left: 28px;
+  min-height: 20px;
+  color: var(--text-secondary);
+}
+
+.spinning::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -10px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------------------
+   20. Labels / Badges
+   -------------------------------------------------------------------------- */
+.label {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.label.warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.label.error,
+.label.danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.label.success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.label.notice,
+.label.info {
+  background: var(--info-bg);
+  color: var(--info);
+}
+
+/* --------------------------------------------------------------------------
+   21. Breadcrumbs / Mode Menu
+   -------------------------------------------------------------------------- */
+.breadcrumb {
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.breadcrumb > li > a {
+  color: var(--text-secondary);
+}
+
+.breadcrumb > li.active > a {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+#modemenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   22. Misc Utilities
+   -------------------------------------------------------------------------- */
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.left {
+  text-align: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.pull-left {
+  float: left;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+strong {
+  font-weight: 600;
+}
+
+small {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+}
+
+em {
+  color: var(--text-secondary);
+}
+
+/* Content section (injected by LuCI) */
+h2[name="content"] {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* View container */
+#view {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Fieldset */
+fieldset {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin: 0 0 16px;
+  background: var(--bg-surface);
+}
+
+fieldset legend {
+  font-weight: 600;
+  padding: 0 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+/* ACL / permission tables */
+.aclgroup-list {
+  margin: 0;
+  padding: 0;
+}
+
+/* Map section apply action bar */
+.cbi-map .cbi-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Description lists */
+.cbi-value-field > em,
+.cbi-value-field > .cbi-value-description {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Flash animation for changed items */
+@keyframes flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.flash {
+  animation: flash 0.35s;
+}
+
+/* Inline error / validation */
+.cbi-value-error input,
+.cbi-value-error select {
+  border-color: var(--danger) !important;
+}
+
+.cbi-value-error .cbi-value-field::after {
+  content: '!';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 50%;
+  margin-left: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   23. Login Page
+   -------------------------------------------------------------------------- */
+body.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-base);
+}
+
+body.login-page .app-header,
+body.login-page .app-sidebar,
+body.login-page .app-footer,
+body.login-page .app-layout {
+  display: none;
+}
+
+.login-shell {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.login-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+}
+
+.login-card__header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.login-card__header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.login-card__header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.login-card__form .cbi-value {
+  border-bottom: none;
+  display: block;
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.login-card__form .cbi-value-title,
+.login-card__form label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  padding: 0;
+  flex: none;
+}
+
+.login-card__form input[type="text"],
+.login-card__form input[type="password"] {
+  width: 100%;
+}
+
+.login-card__form .form-field {
+  margin-bottom: 16px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.form-field input {
+  width: 100%;
+}
+
+.form-error {
+  color: var(--danger);
+  background: var(--danger-bg);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.button--primary,
+.login-card__form .btn.cbi-button-positive,
+.login-card__form button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--gradient-main);
+  border: none;
+  color: #fff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.button--primary:hover {
+  filter: brightness(1.1);
+}
+
+.login-card__footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* sysauth form (bootstrap-compatible login) */
+.login-page .cbi-map {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.login-page .cbi-section {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.login-page .cbi-value {
+  display: block;
+  border: none;
+  margin-bottom: 16px;
+  padding: 0;
+}
+
+.login-page .cbi-value-title {
+  flex: none;
+  padding: 0 0 6px 0;
+}
+
+.login-page .cbi-value-field input {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   24. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .app-main,
+  #maincontent {
+    margin-left: 0;
+  }
+
+  .app-footer {
+    margin-left: 0;
+  }
+
+  .cbi-value {
+    display: block;
+  }
+
+  .cbi-value-title {
+    flex: none;
+    padding-bottom: 4px;
+  }
+
+  .cbi-value-description {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-main,
+  #maincontent {
+    padding: 16px;
+  }
+
+  .cbi-section {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .cbi-page-actions {
+    flex-wrap: wrap;
+  }
+
+  .login-card {
+    padding: 24px;
+  }
+
+  .ifacebox {
+    display: block;
+    margin: 4px 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   25. Noscript compatibility
+   -------------------------------------------------------------------------- */
+noscript .alert-message {
+  margin: 20px;
+}
