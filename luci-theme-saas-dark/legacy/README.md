@@ -1,13 +1,31 @@
-# luci-theme-saas-dark
+# luci-theme-saas-dark (legacy)
 
-`luci-theme-saas-dark` es un theme oscuro para LuCI orientado a OpenWrt `v25.12.2` y superiores.
-Está diseñado para funcionar con el ecosistema actual de OpenWrt donde la instalación de paquetes en router se realiza con **apk** (no con opkg).
+`luci-theme-saas-dark` es un theme oscuro para LuCI orientado a OpenWrt `24.10.x` e inferiores.
+Está diseñado para funcionar con el LuCI basado en Lua (incluyendo el puente `luci-compat`).
+La instalación de paquetes en estas versiones se realiza con **opkg**.
 
 ## Compatibilidad
 
-- OpenWrt `v25.12.2+`.
-- Buildroot oficial de OpenWrt para compilar el paquete LuCI.
-- Instalación en router con `apk add` sobre paquetes `.apk`.
+- OpenWrt `19.07.x` a `24.10.x`.
+- Requiere `luci-compat` en OpenWrt 23.05+ (puente de compatibilidad Lua).
+- Instalación en router con `opkg install` o mediante los scripts proporcionados.
+
+## Instalación rápida (curl)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/nipegun/nipepruebas/main/luci-theme-saas-dark/legacy/install-curl.sh | sh
+```
+
+## Instalación desde clon local
+
+```sh
+git clone https://github.com/nipegun/nipepruebas.git
+cd nipepruebas/luci-theme-saas-dark/legacy
+sh install.sh
+uci set luci.main.mediaurlbase='/luci-static/saas-dark'
+uci commit luci
+/etc/init.d/uhttpd restart
+```
 
 ## Instalación en entorno de desarrollo (Buildroot)
 
@@ -26,33 +44,21 @@ make menuconfig  # LuCI -> Themes -> luci-theme-saas-dark
 make package/luci-theme-saas-dark/{clean,compile} V=sc
 ```
 
-4. Copia el paquete `.apk` al router:
+4. Copia el paquete `.ipk` al router:
 
 ```sh
-scp bin/packages/*/luci/luci-theme-saas-dark_*.apk root@192.168.1.1:/tmp
+scp bin/packages/*/luci/luci-theme-saas-dark_*.ipk root@192.168.1.1:/tmp
 ```
 
-5. Instala con `apk`:
+5. Instala con `opkg`:
 
 ```sh
-ssh root@192.168.1.1 "apk add --allow-untrusted /tmp/luci-theme-saas-dark_*.apk"
+ssh root@192.168.1.1 "opkg install /tmp/luci-theme-saas-dark_*.ipk"
 ```
 
 6. Activa el theme:
 
 ```sh
-uci set luci.main.mediaurlbase='/luci-static/saas-dark'
-uci commit luci
-/etc/init.d/uhttpd restart
-```
-
-## Instalación directa en router (OpenWrt 25.12.x)
-
-```sh
-ssh root@192.168.1.1
-cd /tmp
-wget https://tu-servidor/paquetes/luci-theme-saas-dark_2.0.0_all.apk
-apk add --allow-untrusted /tmp/luci-theme-saas-dark_2.0.0_all.apk
 uci set luci.main.mediaurlbase='/luci-static/saas-dark'
 uci commit luci
 /etc/init.d/uhttpd restart

@@ -2,38 +2,113 @@
   <div class="sidebar-section">
     <p class="sidebar-section__title"><%= translate("Navegación") %></p>
     <ul class="sidebar-menu">
-      <% local tree = luci.dispatcher.node() %>
-      <% if tree and tree.children then %>
-        <% for name, node in luci.util.kspairs(tree.children) do %>
-          <% if node.title and node.target ~= "firstchild" then %>
-            <li class="sidebar-menu__item <%= (name == luci.dispatcher.context.path[1]) and 'is-active' or '' %>">
-              <a href="<%= luci.dispatcher.build_url(unpack(node.path)) %>">
+      <%
+        local disp = require "luci.dispatcher"
+        local util = require "luci.util"
+        local ctx  = disp.context or {}
+        local request = ctx.path or {}
+        local active_cat = request[2] or ""
+
+        local children = nil
+
+        -- Estrategia 1: node("admin") (LuCI Lua puro, OpenWrt 19.07 - 22.03)
+        local ok, admin_node = pcall(disp.node, "admin")
+        if ok and admin_node then
+          children = admin_node.nodes
+        end
+
+        -- Estrategia 2: context.tree (alternativa en LuCI Lua)
+        if not children and ctx.tree then
+          local tree_nodes = ctx.tree.nodes
+          if tree_nodes and tree_nodes["admin"] then
+            children = tree_nodes["admin"].nodes
+          end
+        end
+
+        if children then
+          for k, node in util.kspairs(children) do
+            if node.title then
+              local is_active = (k == active_cat)
+              local href = ""
+              local url_ok, url_val = pcall(disp.build_url, "admin", k)
+              if url_ok and url_val then
+                href = url_val
+              else
+                href = "/cgi-bin/luci/admin/" .. k
+              end
+      %>
+              <li class="sidebar-menu__item <%= is_active and 'is-active' or '' %>">
+                <a href="<%= href %>">
+                  <span class="icon icon-circle" aria-hidden="true"></span>
+                  <span><%= node.title %></span>
+                </a>
+              </li>
+      <%
+            end
+          end
+        else
+          -- Fallback: menú estático para las categorías estándar de LuCI
+          local static_items = {
+            { id = "status",  label = translate("Estado") },
+            { id = "system",  label = translate("Sistema") },
+            { id = "network", label = translate("Red") },
+          }
+          for _, item in ipairs(static_items) do
+            local is_active = (item.id == active_cat)
+            local href = ""
+            local url_ok, url_val = pcall(disp.build_url, "admin", item.id)
+            if url_ok and url_val then
+              href = url_val
+            else
+              href = "/cgi-bin/luci/admin/" .. item.id
+            end
+      %>
+            <li class="sidebar-menu__item <%= is_active and 'is-active' or '' %>">
+              <a href="<%= href %>">
                 <span class="icon icon-circle" aria-hidden="true"></span>
-                <span><%= node.title %></span>
+                <span><%= item.label %></span>
               </a>
             </li>
-          <% end %>
-        <% end %>
-      <% end %>
+      <%
+          end
+        end
+      %>
     </ul>
   </div>
   <div class="sidebar-section sidebar-section--status">
     <p class="sidebar-section__title"><%= translate("Estado del sistema") %></p>
     <ul class="sidebar-status">
+      <%
+        local sys = require "luci.sys"
+        local uptime_str = "-"
+        local ok_up, val_up = pcall(function() return util.trim(sys.exec("uptime -p")) end)
+        if ok_up and val_up and val_up ~= "" then uptime_str = val_up end
+
+        local load_str = "-"
+        local ok_ld, val_ld = pcall(function()
+          local la = sys.loadavg()
+          if la then return table.concat(la, " / ") end
+          return nil
+        end)
+        if ok_ld and val_ld then load_str = val_ld end
+
+        local mem_str = "-"
+        local ok_mem, val_mem = pcall(function()
+          return util.trim(sys.exec("free -m | sed -n 's/^Mem:[[:space:]]*[0-9]*[[:space:]]*[0-9]*[[:space:]]*\\([0-9]*\\).*/\\1 MB/p'"))
+        end)
+        if ok_mem and val_mem and val_mem ~= "" then mem_str = val_mem end
+      %>
       <li>
         <span class="status-label"><%= translate("Tiempo activo") %></span>
-        <span class="status-value"><%= luci.util.trim(luci.sys.exec('uptime -p')) or '-' %></span>
+        <span class="status-value"><%= uptime_str %></span>
       </li>
       <li>
         <span class="status-label"><%= translate("Carga") %></span>
-        <span class="status-value"><%= luci.sys.loadavg() and table.concat(luci.sys.loadavg(), ' / ') or '-' %></span>
+        <span class="status-value"><%= load_str %></span>
       </li>
       <li>
         <span class="status-label"><%= translate("Memoria libre") %></span>
-        <span class="status-value">
-          <% local meminfo = luci.sys.exec("free -m | sed -n 's/^Mem:[[:space:]]*[0-9]*[[:space:]]*[0-9]*[[:space:]]*\\([0-9]*\\).*/\\1 MB/p'") %>
-          <%= luci.util.trim(meminfo) or '-' %>
-        </span>
+        <span class="status-value"><%= mem_str %></span>
       </li>
     </ul>
   </div>

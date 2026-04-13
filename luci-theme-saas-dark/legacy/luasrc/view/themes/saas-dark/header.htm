@@ -1,17 +1,32 @@
+<%
+  local disp = require "luci.dispatcher"
+  local util = require "luci.util"
+  local i18n = require "luci.i18n"
+  local ctx  = disp.context or {}
+
+  local lang = "en"
+  local ok_lang, val_lang = pcall(function() return i18n.context.lang end)
+  if ok_lang and val_lang then lang = val_lang end
+
+  local page_title = "LuCI"
+  if ctx.title then page_title = ctx.title end
+
+  local page_path = ctx.path or {}
+  local page_name = table.concat(page_path, "/")
+
+  local auth_user = "root"
+  if ctx.authuser then auth_user = ctx.authuser end
+%>
 <!DOCTYPE html>
-<html lang="<%= luci.i18n.context.lang %>">
+<html lang="<%= lang %>">
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title><%= luci.dispatcher.context.title or 'LuCI' %> — OpenWrt</title>
+  <title><%= page_title %> — OpenWrt</title>
   <link rel="stylesheet" href="<%=media%>/css/style.css?v=2.0.0" />
   <script defer src="<%=media%>/js/theme.js?v=2.0.0"></script>
 </head>
-<%
-  local page_path = luci.dispatcher.context.path or {}
-  local page_name = table.concat(page_path, '/')
-%>
 <body class="theme-saas-dark" data-luci-page="<%= page_name %>">
   <header class="app-header">
     <div class="brand">
@@ -19,15 +34,15 @@
         <span class="icon icon-menu" aria-hidden="true"></span>
       </button>
       <span class="brand-title">OpenWrt</span>
-      <span class="brand-subtitle"><%= luci.dispatcher.context.title or translate("Panel") %></span>
+      <span class="brand-subtitle"><%= page_title %></span>
     </div>
     <div class="header-actions">
       <button class="icon-button" id="colorScheme" aria-label="Toggle color scheme">
         <span class="icon icon-sun" aria-hidden="true"></span>
       </button>
       <div class="user-menu" role="presentation">
-        <span class="user-avatar" aria-hidden="true">⚙️</span>
-        <span class="user-name"><%= luci.dispatcher.context.authuser or 'root' %></span>
+        <span class="user-avatar" aria-hidden="true">⚙</span>
+        <span class="user-name"><%= auth_user %></span>
       </div>
     </div>
   </header>

@@ -65,6 +65,7 @@ fMain() {
   fDescargar "luasrc/view/themes/saas-dark/footer.htm"              "/usr/lib/lua/luci/view/themes/saas-dark/footer.htm"              "0644"
   fDescargar "luasrc/view/themes/saas-dark/index.htm"               "/usr/lib/lua/luci/view/themes/saas-dark/index.htm"               "0644"
   fDescargar "luasrc/view/themes/saas-dark/login.htm"               "/usr/lib/lua/luci/view/themes/saas-dark/login.htm"               "0644"
+  fDescargar "luasrc/view/themes/saas-dark/sysauth.htm"             "/usr/lib/lua/luci/view/themes/saas-dark/sysauth.htm"             "0644"
   fDescargar "luasrc/view/themes/saas-dark/partials/navigation.htm" "/usr/lib/lua/luci/view/themes/saas-dark/partials/navigation.htm" "0644"
 
   # Assets estáticos
