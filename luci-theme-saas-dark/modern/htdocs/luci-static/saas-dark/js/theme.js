@@ -38,6 +38,8 @@
     }
   }
 
+  let activeFocusTrapHandler = null;
+
   function trapFocus(element) {
     const focusableSelectors = [
       'a[href]',
@@ -63,7 +65,15 @@
       }
     }
 
+    activeFocusTrapHandler = loopFocus;
     element.addEventListener('keydown', loopFocus);
+  }
+
+  function releaseFocusTrap(element) {
+    if (activeFocusTrapHandler) {
+      element.removeEventListener('keydown', activeFocusTrapHandler);
+      activeFocusTrapHandler = null;
+    }
   }
 
   function toggleSidebar() {
@@ -72,6 +82,8 @@
     if (isOpen) {
       trapFocus(sidebar);
       sidebar.querySelector('a, button')?.focus();
+    } else {
+      releaseFocusTrap(sidebar);
     }
   }
 
