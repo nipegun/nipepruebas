@@ -78,6 +78,11 @@ fMain() {
   echo ""
   echo "Aplicando configuración UCI..."
 
+  # Registrar el theme en luci.themes.* para que aparezca en el dropdown "Diseño"
+  uci -q delete luci.themes.SaaSDark
+  uci -q set luci.themes.SaaSDark='/luci-static/saas-dark'
+
+  # Activar el theme como actual
   uci -q set luci.main.mediaurlbase='/luci-static/saas-dark'
   uci -q commit luci
 

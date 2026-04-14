@@ -1,6 +1,8 @@
 #!/bin/sh
-uci -q batch <<'EOT'
-set luci.main.mediaurlbase='/luci-static/saas-dark'
-commit luci
-EOT
+
+uci -q delete luci.themes.SaaSDark
+uci -q set luci.themes.SaaSDark='/luci-static/saas-dark'
+uci -q set luci.main.mediaurlbase='/luci-static/saas-dark'
+uci -q commit luci
+
 exit 0
