@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(curl -fsSL \"https://raw.githubusercontent.com/openwrt/luci/master/themes/luci-theme-bootstrap/ucode/template/themes/bootstrap/header.ut\")"
-    ]
-  }
-}
