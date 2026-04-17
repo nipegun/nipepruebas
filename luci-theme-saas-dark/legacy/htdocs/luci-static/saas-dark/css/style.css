@@ -1115,11 +1115,12 @@ input[type="reset"] {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 7px 16px;
+  height: 30px;
+  padding: 0 16px;
   font-size: 13px;
   font-weight: 500;
   font-family: var(--font-sans);
-  line-height: 1.5;
+  line-height: 30px;
   color: var(--text-primary);
   background: var(--bg-elevated);
   border: 1px solid var(--border-default);
