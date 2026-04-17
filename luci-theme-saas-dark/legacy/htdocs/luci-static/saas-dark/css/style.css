@@ -865,8 +865,16 @@ select {
 .cbi-dropdown.btn > .open,
 .cbi-dropdown.cbi-button > .open {
   padding: 0 .5em;
-  margin-left: .5em;
+  margin-left: auto;
   border-left: 1px solid var(--border-subtle);
+  order: 10;
+}
+
+.cbi-dropdown.btn > div,
+.cbi-dropdown.cbi-button > div {
+  position: absolute;
+  width: 0;
+  overflow: hidden;
 }
 
 .cbi-dropdown > .more,
