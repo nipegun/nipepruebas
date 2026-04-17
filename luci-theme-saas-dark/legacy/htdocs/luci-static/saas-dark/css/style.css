@@ -818,14 +818,20 @@ select {
 }
 
 .cbi-dropdown > ul > li {
+  display: none;
   padding: 6px 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cbi-dropdown > ul > li[selected] {
-  /* currently selected value */
+.cbi-dropdown > ul > li[display] {
+  display: list-item;
+}
+
+.cbi-dropdown[open] > ul.dropdown > li,
+.cbi-dropdown > .open > li {
+  display: list-item;
 }
 
 .cbi-dropdown[open] > ul.dropdown,
