@@ -65,7 +65,7 @@ return baseclass.extend({
       return E([]);
 
     var self = this;
-    var activeL2 = L.env.dispatchpath[2] || '';
+    var activeL2 = L.env.dispatchpath[1] || '';
 
     children.forEach(function(child) {
       var isActive = (child.name === activeL2);
@@ -118,7 +118,7 @@ return baseclass.extend({
       return E([]);
 
     var ul = E('ul', { 'class': 'menu-sub' });
-    var activeL3 = L.env.dispatchpath[3] || '';
+    var activeL3 = L.env.dispatchpath[2] || '';
 
     children.forEach(function(child) {
       var isActive = (child.name === activeL3);

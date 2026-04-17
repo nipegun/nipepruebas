@@ -585,13 +585,23 @@ body.sidebar-collapsed .app-footer {
   background: var(--bg-elevated);
 }
 
-.cbi-tabcontainer[data-tab-active="false"] {
-  display: none;
+[data-tab-title] {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
 }
 
-.cbi-tabcontainer[data-tab-active="true"] {
-  display: block;
-  margin-top: 16px;
+[data-tab-active="true"] {
+  height: auto;
+  opacity: 1;
+  overflow: visible;
+  transition: opacity 0.25s ease-in;
+}
+
+[data-tab-active="false"] {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
 }
 
 .cbi-tabcontainer {
