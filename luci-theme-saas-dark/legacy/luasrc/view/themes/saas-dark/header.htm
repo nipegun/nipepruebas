@@ -38,19 +38,20 @@
 <body class="theme-saas-dark lang_<%= lang %>" data-page="<%= page_id %>">
   <% if not blank_page then %>
   <header class="app-header">
-    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
-      <span class="hamburger"></span>
-    </button>
-    <a class="brand" href="/"><%= hostname %></a>
     <div id="indicators" class="header-indicators"></div>
   </header>
   <div class="app-layout">
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="app-sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <span class="sidebar-brand">OpenWrt</span>
-        <span class="sidebar-version"><%= page_title %></span>
+      <div class="sidebar-top">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+          <span class="hamburger"></span>
+        </button>
+        <div class="sidebar-header">
+          <span class="sidebar-brand"><%= hostname %></span>
+        </div>
       </div>
+      <div class="sidebar-indicators" id="sidebarIndicators"></div>
       <nav class="sidebar-nav">
         <ul class="nav sidebar-menu" id="topmenu" style="display:none"></ul>
       </nav>

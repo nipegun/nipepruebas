@@ -1,0 +1,13 @@
+Package: luci-theme-bootstrap
+Version: 24.357.59015~779ca14
+Depends: libc, luci-base
+Source: feeds/luci/themes/luci-theme-bootstrap
+SourceName: luci-theme-bootstrap
+License: Apache-2.0
+Section: luci
+SourceDateEpoch: 1734884615
+URL: https://github.com/openwrt/luci
+Maintainer: OpenWrt LuCI community
+Architecture: all
+Installed-Size: 92160
+Description:  Bootstrap Theme (default)
