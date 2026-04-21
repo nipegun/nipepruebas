@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Remote execution from the openwrt terminal:
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/luci-theme-saas-dark/modern/install-with-curl.sh | sh
 
 #echo 'nameserver 9.9.9.9' > /etc/resolv.conf
 #opkg update
