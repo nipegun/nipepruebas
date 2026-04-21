@@ -1,6 +1,10 @@
 #!/bin/bash
-
 set -euo pipefail
+
+
+#echo 'nameserver 9.9.9.9' > /etc/resolv.conf
+#opkg update
+#opkg install luci-compat
 
 cBaseURL="https://raw.githubusercontent.com/nipegun/nipepruebas/main/luci-theme-saas-dark/modern"
 cTempDir=""
