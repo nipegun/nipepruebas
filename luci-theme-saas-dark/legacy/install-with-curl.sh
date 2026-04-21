@@ -1,7 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-# curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/luci-theme-saas-dark/legacy/install-with-curl.sh | sh
+# Remote execution from the openwrt terminal:
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/luci-theme-saas-dark/legacy/install-with-curl.sh | sh
+
+echo 'nameserver 9.9.9.9' > /etc/resolv.conf
+opkg update
+opkg install luci-compat
 
 cBaseURL="https://raw.githubusercontent.com/nipegun/nipepruebas/main/luci-theme-saas-dark/legacy"
 cTempDir=""
