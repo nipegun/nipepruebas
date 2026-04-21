@@ -1,6 +1,7 @@
 #!/bin/bash
-
 set -euo pipefail
+
+# curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/luci-theme-saas-dark/legacy/install-with-curl.sh | sh
 
 cBaseURL="https://raw.githubusercontent.com/nipegun/nipepruebas/main/luci-theme-saas-dark/legacy"
 cTempDir=""
