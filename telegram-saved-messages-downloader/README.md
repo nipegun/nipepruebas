@@ -35,7 +35,7 @@ pip install telethon rich
 ## Uso (una sola línea)
 
 ```bash
-python tsmdownloader.py --api-id 123456 --api-hash abcdef123456 --phone +34123456789
+python3 ./tsmdownloader.py --api-id 123456 --api-hash abcdef123456 --phone +34123456789
 ```
 
 ## Opciones útiles
