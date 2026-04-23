@@ -2,6 +2,12 @@
 
 Script de terminal para descargar todos los mensajes del chat **Saved Messages** de Telegram en orden cronológico.
 
+## Ejecución remota directa
+
+```bash
+curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | python3 - --api-id '12345678' --api-hash 'a1a2a3a4a5a6a7a8a9a0a1a2a3a4a5a6' --phone '+34666666666'
+```
+
 ## Cómo conseguir `api-id` y `api-hash`
 
 1. Inicia sesión en https://my.telegram.org con tu número de teléfono.
@@ -19,11 +25,7 @@ Script de terminal para descargar todos los mensajes del chat **Saved Messages**
 > ⚠️ Trata tu `api-hash` como una contraseña: no lo publiques ni lo subas a repositorios.
 
 
-## Ejecución remota directa
 
-```bash
-curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | python3 - --api-id '12345678' --api-hash 'a1a2a3a4a5a6a7a8a9a0a1a2a3a4a5a6' --phone '+34666666666'
-```
 
 ## Instalación
 
