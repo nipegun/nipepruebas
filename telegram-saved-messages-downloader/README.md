@@ -5,7 +5,7 @@ Script de terminal para descargar todos los mensajes del chat **Saved Messages**
 ## Ejecución remota directa
 
 ```bash
-curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | python3 - "Cadena"
+curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | python3 - --api-id 'x' --api-hash 'x' --phone '+34666666666'
 ```
 
 ## Instalación
