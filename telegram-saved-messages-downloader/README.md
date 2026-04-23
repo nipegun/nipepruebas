@@ -16,6 +16,22 @@ source .venv/bin/activate
 pip install telethon rich
 ```
 
+## Cómo conseguir `api-id` y `api-hash`
+
+1. Inicia sesión en https://my.telegram.org con tu número de teléfono.
+2. Introduce el código que Telegram te envía (normalmente llega al propio Telegram).
+3. En el panel, entra a **API development tools**.
+4. Si es la primera vez, completa los campos de creación de app (por ejemplo:
+   - **App title**: `tsm-downloader`
+   - **Short name**: `tsmdownloader`
+   - **Platform**: `Desktop`
+   - **Description**: `Descarga de Saved Messages`
+5. Guarda el formulario. En la siguiente pantalla verás:
+   - **App api_id** → úsalo como valor de `--api-id`
+   - **App api_hash** → úsalo como valor de `--api-hash`
+
+> ⚠️ Trata tu `api-hash` como una contraseña: no lo publiques ni lo subas a repositorios.
+
 ## Uso (una sola línea)
 
 ```bash
