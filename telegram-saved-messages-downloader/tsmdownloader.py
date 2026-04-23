@@ -9,10 +9,10 @@
 # Script de NiPeGun para descargar todos los mensajes del chat "Saved messages" de Telegram
 #
 # Ejecución remota (puede requerir permisos sudo):
-#   curl -sL https://raw.githubusercontent.com/nipegun/d-scripts/refs/heads/master/InstDeSoftware/_/Python-BloqueInicialParaInstalarDependencias.py | python3 - "Cadena"
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | python3 - "Cadena"
 #
 # Bajar y editar directamente el archivo en nano
-#   curl -sL https://raw.githubusercontent.com/nipegun/d-scripts/refs/heads/master/InstDeSoftware/_/Python-BloqueInicialParaInstalarDependencias.py | nano -
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | nano -
 # ----------
 
 # ------ Inicio del bloque de instalación de dependencias de paquetes python ------
