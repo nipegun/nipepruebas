@@ -2,6 +2,12 @@
 
 Script de terminal para descargar todos los mensajes del chat **Saved Messages** de Telegram en orden cronológico.
 
+## Ejecución remota directa
+
+```bash
+curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-downloader/tsmdownloader.py | python3 - "Cadena"
+```
+
 ## Instalación
 
 ```bash
