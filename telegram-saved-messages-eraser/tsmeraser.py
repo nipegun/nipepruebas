@@ -9,7 +9,7 @@
 # Script de NiPeGun para borrar todos los mensajes del chat "Saved messages" de Telegram
 #
 # Ejecución remota:
-#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-eraser/tsmeraser.py | python3 ---api-id '12345678' --api-hash 'a1a2a3a4a5a6a7a8a9a0a1a2a3a4a5a6' --phone '+34666666666'
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-eraser/tsmeraser.py | python3 - --api-id '12345678' --api-hash 'a1a2a3a4a5a6a7a8a9a0a1a2a3a4a5a6' --phone '+34666666666'
 #
 # Bajar y editar directamente el archivo en nano:
 #   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/telegram-saved-messages-eraser/tsmeraser.py | nano -
@@ -27,14 +27,11 @@ dPaquetesPython = {
 import getpass
 import importlib.util
 import os
-import re
 import shutil
 import subprocess
 import sys
 
 from dataclasses import dataclass
-from datetime import datetime
-from pathlib import Path
 from typing import Optional
 
 cNombreDelPaqueteApt = "python3-pip"
@@ -133,12 +130,8 @@ from rich.progress import TextColumn
 from rich.progress import TimeElapsedColumn
 from telethon import TelegramClient
 from telethon.errors import SessionPasswordNeededError
-from telethon.tl.custom.message import Message
 
 console = Console()
-
-cPatronSoloURL = re.compile(r"^https?://\S+$", re.IGNORECASE)
-cPatronCaracteresSeguros = re.compile(r"[^A-Za-z0-9._ -]+")
 
 @dataclass
 class Config:
@@ -146,14 +139,13 @@ class Config:
   api_hash: str
   phone: Optional[str]
   session: str
-  output_dir: Path
   code: Optional[str]
   password: Optional[str]
   limit: Optional[int]
 
 def fParsearArgumentos() -> Config:
   vParser = argparse.ArgumentParser(
-    description="Descarga todos los mensajes de 'Saved Messages' en archivos locales."
+    description="Borra todos los mensajes de 'Saved Messages'."
   )
   vParser.add_argument("--api-id", type=int, required=True, help="Telegram API ID")
   vParser.add_argument("--api-hash", required=True, help="Telegram API hash")
@@ -163,14 +155,9 @@ def fParsearArgumentos() -> Config:
     default="tsm_session",
     help="Nombre/ruta base del archivo de sesión de Telethon (default: tsm_session)"
   )
-  vParser.add_argument(
-    "--output-dir",
-    default="messages",
-    help="Directorio de salida (default: ./messages)"
-  )
   vParser.add_argument("--code", help="Código OTP de Telegram")
   vParser.add_argument("--password", help="Contraseña 2FA")
-  vParser.add_argument("--limit", type=int, help="Límite de mensajes a descargar (opcional)")
+  vParser.add_argument("--limit", type=int, help="Límite de mensajes a borrar (opcional)")
 
   vArgs = vParser.parse_args()
 
@@ -179,38 +166,10 @@ def fParsearArgumentos() -> Config:
     api_hash=vArgs.api_hash,
     phone=vArgs.phone,
     session=vArgs.session,
-    output_dir=Path(vArgs.output_dir).expanduser().resolve(),
     code=vArgs.code,
     password=vArgs.password,
     limit=vArgs.limit
   )
-
-def fSanitizarNombreDeArchivo(pValor: str, pFallback: str = "archivo") -> str:
-  vLimpiado = cPatronCaracteresSeguros.sub("_", pValor).strip(" ._")
-  return vLimpiado or pFallback
-
-def fGenerarPrefijoFecha(pFecha: datetime) -> str:
-  return f"y{pFecha.year:04d}m{pFecha.month:02d}d{pFecha.day:02d}h{pFecha.hour:02d}m{pFecha.minute:02d}s{pFecha.second:02d}"
-
-def fGenerarPrefijoBase(pMessage: Message) -> str:
-  vTimestamp = pMessage.date.astimezone()
-  vPrefijoFecha = fGenerarPrefijoFecha(vTimestamp)
-  vMessageId = getattr(pMessage, "id", None)
-
-  if vMessageId is None:
-    return vPrefijoFecha
-
-  return f"{vPrefijoFecha}-id{vMessageId}"
-
-def fEsSoloURL(pTexto: str) -> bool:
-  return bool(cPatronSoloURL.fullmatch(pTexto.strip()))
-
-def fEscribirArchivoDeTexto(pMessage: Message, pPrefijoBase: str, pDirectorioSalida: Path) -> Path:
-  vTexto = (pMessage.message or "").strip()
-  vExtension = "url" if fEsSoloURL(vTexto) else "txt"
-  vRutaArchivo = pDirectorioSalida / f"{pPrefijoBase}-Texto.{vExtension}"
-  vRutaArchivo.write_text(vTexto + "\n", encoding="utf-8")
-  return vRutaArchivo
 
 def fLeerDesdeTTY(pPrompt: str, pOculto: bool = False) -> str:
   try:
@@ -270,13 +229,9 @@ async def fAsegurarLogin(pClient: TelegramClient, pCfg: Config) -> None:
     vPassword = fObtenerPassword2FA(pCfg)
     await pClient.sign_in(password=vPassword)
 
-async def fProcesarMensajes(pClient: TelegramClient, pCfg: Config, pTotalMensajes: int) -> tuple[int, int, int, int]:
-  pCfg.output_dir.mkdir(parents=True, exist_ok=True)
-
-  vContadorProcesados = 0
-  vCantidadMedia = 0
-  vCantidadTextos = 0
-  vCantidadOmitidos = 0
+async def fBorrarMensajes(pClient: TelegramClient, pCfg: Config, pTotalMensajes: int) -> int:
+  vContadorBorrados = 0
+  vIdsLote = []
 
   with Progress(
     SpinnerColumn(),
@@ -286,40 +241,31 @@ async def fProcesarMensajes(pClient: TelegramClient, pCfg: Config, pTotalMensaje
     TimeElapsedColumn(),
     console=console
   ) as vProgress:
-    vTask = vProgress.add_task("Descargando Saved Messages...", total=pTotalMensajes)
+    vTask = vProgress.add_task("Borrando Saved Messages...", total=pTotalMensajes)
 
     async for vMessage in pClient.iter_messages("me", reverse=True, limit=pCfg.limit):
-      vContadorProcesados += 1
-      vPrefijoBase = fGenerarPrefijoBase(vMessage)
+      vIdsLote.append(vMessage.id)
 
+      if len(vIdsLote) >= 100:
+        await pClient.delete_messages("me", vIdsLote)
+        vContadorBorrados += len(vIdsLote)
+        vIdsLote = []
+        vProgress.update(
+          vTask,
+          description=f"Borrados {vContadorBorrados} de {pTotalMensajes}",
+          completed=vContadorBorrados
+        )
+
+    if vIdsLote:
+      await pClient.delete_messages("me", vIdsLote)
+      vContadorBorrados += len(vIdsLote)
       vProgress.update(
         vTask,
-        description=f"Descargando mensaje {vContadorProcesados} de {pTotalMensajes}",
-        completed=vContadorProcesados
+        description=f"Borrados {vContadorBorrados} de {pTotalMensajes}",
+        completed=vContadorBorrados
       )
 
-      if list(pCfg.output_dir.glob(f"{vPrefijoBase}-*")):
-        vCantidadOmitidos += 1
-        continue
-
-      if vMessage.media:
-        vNombreSugerido = "Media"
-
-        if vMessage.file and vMessage.file.name:
-          vNombreSugerido = fSanitizarNombreDeArchivo(vMessage.file.name, "Media")
-
-        vNombreDestino = f"{vPrefijoBase}-{vNombreSugerido}"
-        vRutaDestino = pCfg.output_dir / vNombreDestino
-        vRutaGuardada = await pClient.download_media(vMessage, file=vRutaDestino)
-
-        if vRutaGuardada:
-          vCantidadMedia += 1
-
-      if (vMessage.message or "").strip():
-        fEscribirArchivoDeTexto(vMessage, vPrefijoBase, pCfg.output_dir)
-        vCantidadTextos += 1
-
-  return vContadorProcesados, vCantidadMedia, vCantidadTextos, vCantidadOmitidos
+  return vContadorBorrados
 
 async def fContarMensajes(pClient: TelegramClient) -> int:
   vResultado = await pClient.get_messages("me", limit=0)
@@ -334,19 +280,15 @@ async def fContarMensajes(pClient: TelegramClient) -> int:
 async def fEjecutar(pCfg: Config) -> int:
   console.print(
     Panel.fit(
-      "[bold green]Telegram Saved Messages Downloader[/bold green]\n"
-      "Exportación cronológica de todo tu chat personal.",
-      title="TSMDownloader",
+      "[bold green]Telegram Saved Messages Eraser[/bold green]\n"
+      "Borrado masivo de todo tu chat personal.",
+      title="TSMEraser",
       border_style="cyan"
     )
   )
 
   vClient = TelegramClient(pCfg.session, pCfg.api_id, pCfg.api_hash)
-
-  vTotal = 0
-  vCantidadMedia = 0
-  vCantidadTextos = 0
-  vCantidadOmitidos = 0
+  vTotalBorrados = 0
 
   try:
     await vClient.connect()
@@ -356,24 +298,22 @@ async def fEjecutar(pCfg: Config) -> int:
     vTotalMensajes = await fContarMensajes(vClient)
     console.print(f"[cyan]Total de mensajes en Saved Messages: [bold]{vTotalMensajes}[/bold][/cyan]\n")
 
-    vTotalAProcesar = vTotalMensajes
+    vTotalABorrar = vTotalMensajes
     if pCfg.limit is not None and pCfg.limit < vTotalMensajes:
-      vTotalAProcesar = pCfg.limit
-      console.print(f"[yellow]Se procesarán solo {vTotalAProcesar} mensajes (límite aplicado).[/yellow]\n")
+      vTotalABorrar = pCfg.limit
+      console.print(f"[yellow]Se borrarán solo {vTotalABorrar} mensajes (límite aplicado).[/yellow]\n")
 
-    vTotal, vCantidadMedia, vCantidadTextos, vCantidadOmitidos = await fProcesarMensajes(
-      vClient, pCfg, vTotalAProcesar
-    )
+    if vTotalABorrar == 0:
+      console.print("[green]No hay mensajes para borrar.[/green]")
+      return 0
+
+    vTotalBorrados = await fBorrarMensajes(vClient, pCfg, vTotalABorrar)
   finally:
     await vClient.disconnect()
 
   console.print(
     Panel.fit(
-      f"[bold]Mensajes procesados:[/bold] {vTotal}\n"
-      f"[bold]Mensajes omitidos (ya existían):[/bold] {vCantidadOmitidos}\n"
-      f"[bold]Archivos multimedia:[/bold] {vCantidadMedia}\n"
-      f"[bold]Archivos de texto/url:[/bold] {vCantidadTextos}\n"
-      f"[bold]Carpeta de salida:[/bold] {pCfg.output_dir}",
+      f"[bold]Mensajes borrados:[/bold] {vTotalBorrados}",
       title="Resumen",
       border_style="green"
     )
