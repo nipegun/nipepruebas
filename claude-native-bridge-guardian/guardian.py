@@ -9,10 +9,10 @@
 # Script de NiPeGun para x
 #
 # Ejecución remota (puede requerir permisos sudo):
-#   curl -sL https://raw.githubusercontent.com/nipegun/d-scripts/refs/heads/master/InstDeSoftware/_/Python-BloqueInicialParaInstalarDependencias.py | python3 - "Cadena"
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | python3 - "Cadena"
 #
 # Bajar y editar directamente el archivo en nano
-#   curl -sL https://raw.githubusercontent.com/nipegun/d-scripts/refs/heads/master/InstDeSoftware/_/Python-BloqueInicialParaInstalarDependencias.py | nano -
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | nano -
 # ----------
 
 # ------ Inicio del bloque de instalación de dependencias de paquetes python ------
