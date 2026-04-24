@@ -1,19 +1,20 @@
 #!/usr/bin/env -S PYTHONDONTWRITEBYTECODE=1 python3
 
-# Pongo a disposición pública este script bajo el término de "software de dominio público".
-# Puedes hacer lo que quieras con él porque es libre de verdad; no libre con condiciones como las licencias GNU y otras patrañas similares.
-# Si se te llena la boca hablando de libertad entonces hazlo realmente libre.
-# No tienes que aceptar ningún tipo de términos de uso o licencia para utilizarlo o modificarlo porque va sin CopyLeft.
+# I make this script publicly available under the term "public domain software."
+# You can do whatever you want with it because it is truly free—unlike so-called "free" software with conditions, like the GNU licenses and other similar nonsense.
+# If you're so eager to talk about freedom, then make it truly free.
+# You don't have to accept any terms of use or license to use or modify it, because it comes with no CopyLeft.
 
 # ----------
-# Script de NiPeGun para x
+# NiPeGun's script to x
 #
-# Ejecución remota (puede requerir permisos sudo):
+# Remote execution (may require sudo privileges):
 #   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | python3 - "Cadena"
 #
-# Bajar y editar directamente el archivo en nano
+# Download and edit the file directly in nano:
 #   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | nano -
 # ----------
+
 
 # ------ Inicio del bloque de instalación de dependencias de paquetes python ------
 
