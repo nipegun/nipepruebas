@@ -150,7 +150,6 @@ class Config:
   code: Optional[str]
   password: Optional[str]
   limit: Optional[int]
-  count: bool
 
 def fParsearArgumentos() -> Config:
   vParser = argparse.ArgumentParser(
@@ -172,11 +171,6 @@ def fParsearArgumentos() -> Config:
   vParser.add_argument("--code", help="Código OTP de Telegram")
   vParser.add_argument("--password", help="Contraseña 2FA")
   vParser.add_argument("--limit", type=int, help="Límite de mensajes a descargar (opcional)")
-  vParser.add_argument(
-    "-c", "--count",
-    action="store_true",
-    help="Cuenta todos los mensajes en Saved Messages sin descargarlos"
-  )
 
   vArgs = vParser.parse_args()
 
@@ -188,8 +182,7 @@ def fParsearArgumentos() -> Config:
     output_dir=Path(vArgs.output_dir).expanduser().resolve(),
     code=vArgs.code,
     password=vArgs.password,
-    limit=vArgs.limit,
-    count=vArgs.count
+    limit=vArgs.limit
   )
 
 def fSanitizarNombreDeArchivo(pValor: str, pFallback: str = "archivo") -> str:
@@ -277,12 +270,13 @@ async def fAsegurarLogin(pClient: TelegramClient, pCfg: Config) -> None:
     vPassword = fObtenerPassword2FA(pCfg)
     await pClient.sign_in(password=vPassword)
 
-async def fProcesarMensajes(pClient: TelegramClient, pCfg: Config) -> tuple[int, int, int]:
+async def fProcesarMensajes(pClient: TelegramClient, pCfg: Config, pTotalMensajes: int) -> tuple[int, int, int, int]:
   pCfg.output_dir.mkdir(parents=True, exist_ok=True)
 
-  vTotalMensajes = 0
+  vContadorProcesados = 0
   vCantidadMedia = 0
   vCantidadTextos = 0
+  vCantidadOmitidos = 0
 
   with Progress(
     SpinnerColumn(),
@@ -292,11 +286,21 @@ async def fProcesarMensajes(pClient: TelegramClient, pCfg: Config) -> tuple[int,
     TimeElapsedColumn(),
     console=console
   ) as vProgress:
-    vTask = vProgress.add_task("Descargando Saved Messages...", total=None)
+    vTask = vProgress.add_task("Descargando Saved Messages...", total=pTotalMensajes)
 
     async for vMessage in pClient.iter_messages("me", reverse=True, limit=pCfg.limit):
-      vTotalMensajes += 1
+      vContadorProcesados += 1
       vPrefijoBase = fGenerarPrefijoBase(vMessage)
+
+      vProgress.update(
+        vTask,
+        description=f"Descargando mensaje {vContadorProcesados} de {pTotalMensajes}",
+        completed=vContadorProcesados
+      )
+
+      if list(pCfg.output_dir.glob(f"{vPrefijoBase}-*")):
+        vCantidadOmitidos += 1
+        continue
 
       if vMessage.media:
         vNombreSugerido = "Media"
@@ -315,30 +319,17 @@ async def fProcesarMensajes(pClient: TelegramClient, pCfg: Config) -> tuple[int,
         fEscribirArchivoDeTexto(vMessage, vPrefijoBase, pCfg.output_dir)
         vCantidadTextos += 1
 
-      vProgress.update(vTask, description=f"Procesando mensaje #{vTotalMensajes}")
-      vProgress.update(vTask, total=vTotalMensajes, completed=vTotalMensajes)
-
-  return vTotalMensajes, vCantidadMedia, vCantidadTextos
+  return vContadorProcesados, vCantidadMedia, vCantidadTextos, vCantidadOmitidos
 
 async def fContarMensajes(pClient: TelegramClient) -> int:
-  vTotalMensajes = 0
+  vResultado = await pClient.get_messages("me", limit=0)
+  vTotal = getattr(vResultado, "total", None)
 
-  with Progress(
-    SpinnerColumn(),
-    TextColumn("[progress.description]{task.description}"),
-    TimeElapsedColumn(),
-    console=console
-  ) as vProgress:
-    vTask = vProgress.add_task("Contando mensajes en Saved Messages...", total=None)
+  if vTotal is None:
+    vResultado = await pClient.get_messages("me", limit=1)
+    vTotal = getattr(vResultado, "total", 0) or 0
 
-    async for _ in pClient.iter_messages("me"):
-      vTotalMensajes += 1
-      if vTotalMensajes % 100 == 0:
-        vProgress.update(vTask, description=f"Mensajes contados: {vTotalMensajes}")
-
-    vProgress.update(vTask, description=f"Mensajes contados: {vTotalMensajes}")
-
-  return vTotalMensajes
+  return vTotal
 
 async def fEjecutar(pCfg: Config) -> int:
   console.print(
@@ -355,30 +346,31 @@ async def fEjecutar(pCfg: Config) -> int:
   vTotal = 0
   vCantidadMedia = 0
   vCantidadTextos = 0
+  vCantidadOmitidos = 0
 
   try:
     await vClient.connect()
     await fAsegurarLogin(vClient, pCfg)
-    if pCfg.count:
-      vTotal = await fContarMensajes(vClient)
-    else:
-      vTotal, vCantidadMedia, vCantidadTextos = await fProcesarMensajes(vClient, pCfg)
+
+    console.print("[cyan]Contando mensajes en Saved Messages...[/cyan]")
+    vTotalMensajes = await fContarMensajes(vClient)
+    console.print(f"[cyan]Total de mensajes en Saved Messages: [bold]{vTotalMensajes}[/bold][/cyan]\n")
+
+    vTotalAProcesar = vTotalMensajes
+    if pCfg.limit is not None and pCfg.limit < vTotalMensajes:
+      vTotalAProcesar = pCfg.limit
+      console.print(f"[yellow]Se procesarán solo {vTotalAProcesar} mensajes (límite aplicado).[/yellow]\n")
+
+    vTotal, vCantidadMedia, vCantidadTextos, vCantidadOmitidos = await fProcesarMensajes(
+      vClient, pCfg, vTotalAProcesar
+    )
   finally:
     await vClient.disconnect()
-
-  if pCfg.count:
-    console.print(
-      Panel.fit(
-        f"[bold]Mensajes en Saved Messages:[/bold] {vTotal}",
-        title="Conteo",
-        border_style="green"
-      )
-    )
-    return 0
 
   console.print(
     Panel.fit(
       f"[bold]Mensajes procesados:[/bold] {vTotal}\n"
+      f"[bold]Mensajes omitidos (ya existían):[/bold] {vCantidadOmitidos}\n"
       f"[bold]Archivos multimedia:[/bold] {vCantidadMedia}\n"
       f"[bold]Archivos de texto/url:[/bold] {vCantidadTextos}\n"
       f"[bold]Carpeta de salida:[/bold] {pCfg.output_dir}",
