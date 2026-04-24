@@ -10,6 +10,7 @@
 #
 # Remote execution (may require sudo privileges):
 #   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | sudo python3 - --uninstall --enable-auditd
+#   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | sudo python3 - --monitor
 #
 # Download and edit the file directly in nano:
 #   curl -sL https://raw.githubusercontent.com/nipegun/nipepruebas/refs/heads/main/claude-native-bridge-guardian/guardian.py | nano -
